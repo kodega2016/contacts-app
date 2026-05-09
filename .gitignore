@@ -1,0 +1,61 @@
+# Build folders
+bin/
+obj/
+
+# Visual Studio
+.vs/
+*.user
+*.suo
+*.userprefs
+*.csproj.user
+
+# Rider / JetBrains
+.idea/
+*.sln.iml
+
+# VS Code
+.vscode/
+
+# Logs
+*.log
+
+# ASP.NET Core secrets
+secrets.json
+
+# App settings (optional)
+appsettings.Development.json
+
+# Publish output
+publish/
+wwwroot/dist/
+wwwroot/lib/
+
+# NuGet
+*.nupkg
+packages/
+.nuget/
+
+# Test results
+TestResults/
+coverage/
+
+# Entity Framework
+*.mdf
+*.ldf
+
+# SQLite
+*.db
+*.db-shm
+*.db-wal
+*.sqlite
+
+# Node (if using frontend tooling)
+node_modules/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Temporary files
+tmp/
+temp/

@@ -1,0 +1,7 @@
+<Solution>
+  <Project Path="ContactsApp.Tests/ContactsApp.Tests.csproj" />
+  <Project Path="ContactsApp/ContactsApp.csproj" />
+  <Project Path="Entities/Entities.csproj" />
+  <Project Path="ServiceContracts/ServiceContracts.csproj" />
+  <Project Path="Services/Services.csproj" />
+</Solution>
