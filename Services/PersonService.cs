@@ -208,12 +208,11 @@ public class PersonService : IPersonService
 
     public bool DeletePerson(Guid? personId)
     {
-        if (personId == null) return false;
-        
+        if (personId == null) throw new ArgumentNullException(nameof(personId));
         var person = _persons.FirstOrDefault(person => person.PersonId == personId);
         if (person == null) return false;
-        
-        _persons.Remove(person);
+
+        _persons.RemoveAll(p => p.PersonId == personId);
         return true;
     }
 

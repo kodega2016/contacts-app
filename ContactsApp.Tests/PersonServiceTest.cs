@@ -313,6 +313,8 @@ public class PersonServiceTest
 
     // When we sort based on the Name in DESC,it should return 
     // persons list in descending on Name
+    
+    [Fact]
 
     public void GetSortedPersons()
     {
@@ -468,6 +470,18 @@ public class PersonServiceTest
     #region DeletePerson
 
     // When we try to delete without passing the id,it should throw ArgumentNullException
+    [Fact]
+    public void DeletePerson_Null()
+    {
+        // Assert
+        Assert.Throws<ArgumentNullException>(() =>
+        {
+            // Act
+            _personService.DeletePerson(null);
+        });
+    }
+    
+    
     [Fact]
     public void DeletePerson_NotFound()
     {
