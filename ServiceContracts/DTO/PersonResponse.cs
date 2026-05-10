@@ -44,6 +44,11 @@ public class PersonResponse
         hashCode.Add(ReceiveNewsLetter);
         return hashCode.ToHashCode();
     }
+
+    public override string ToString()
+    {
+        return $"ID:{Id} Name:{Name} Email:{Email}";
+    }
 }
 
 public static class PersonResponseExtensions
