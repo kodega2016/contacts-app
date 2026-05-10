@@ -21,15 +21,13 @@ public class PersonServiceTest
     }
 
     #region AddPerson
+
     // When we supply null value as PersonAddRequest,
     // It should throw ArgumentNullException
     [Fact]
     public void AddPerson_NullPersonRequest()
     {
-        Assert.Throws<ArgumentNullException>(() =>
-        {
-            _personService.AddPerson(null);
-        });
+        Assert.Throws<ArgumentNullException>(() => { _personService.AddPerson(null); });
     }
 
     // When we supply Name as null for PersonAddRequest
@@ -41,10 +39,7 @@ public class PersonServiceTest
         PersonAddRequest? personAddRequest = new PersonAddRequest() { Name = null };
 
         // Act and Assert
-        Assert.Throws<ArgumentException>(() =>
-        {
-            _personService.AddPerson(personAddRequest);
-        });
+        Assert.Throws<ArgumentException>(() => { _personService.AddPerson(personAddRequest); });
     }
 
     // When we supply proper details,it should
@@ -75,7 +70,9 @@ public class PersonServiceTest
         List<PersonResponse> personList = _personService.GetAllPersons();
         Assert.Contains(response, personList);
     }
+
     #endregion
+
     // If we supply null as PersonId,it should return null as PersonResponse
     [Fact]
     public void GetPersonByPersonID_NullPersonId()
@@ -121,6 +118,7 @@ public class PersonServiceTest
     }
 
     #region GetAllPersons
+
     // The GetAllPersons should return an empty list by default
     [Fact]
     public void GetAllPersons_Empty()
@@ -183,10 +181,12 @@ public class PersonServiceTest
         Assert.Contains(personResponse2, persons);
         Assert.True(persons.Count == 2);
     }
+
     #endregion
 
 
     #region GetFilteredPersons
+
     // If the search text is empty and search by is Name it should return all persons
     [Fact]
     public void GetFilteredPersons_EmptySearchText()
@@ -223,11 +223,11 @@ public class PersonServiceTest
         PersonResponse personResponse2 = _personService.AddPerson(personAddRequest2);
 
         List<PersonResponse> personResponsesFromAdd = [personResponse1, personResponse2];
-        
-        
+
+
         // Acts
-        List<PersonResponse> persons = _personService.GetFilteredPersons(searchBy:nameof(Person.Name),"");
-        
+        List<PersonResponse> persons = _personService.GetFilteredPersons(searchBy: nameof(Person.Name), "");
+
         // Assert
         Assert.Equal(persons, personResponsesFromAdd);
         Assert.Equal(persons, personResponsesFromAdd);
@@ -238,8 +238,8 @@ public class PersonServiceTest
         }
 
     }
-    
-    
+
+
     // First we will add few persons;and then we will search based on
     // person name with some search string,it should return the matching
     // persons
@@ -274,7 +274,7 @@ public class PersonServiceTest
             CountryId = countryResponse2.CountryId,
             ReceiveNewsLetter = false,
         };
-        
+
         PersonAddRequest personAddRequest3 = new()
         {
             Name = "James Vogan",
@@ -288,8 +288,8 @@ public class PersonServiceTest
         var personResponse1 = _personService.AddPerson(personAddRequest1);
         var personResponse2 = _personService.AddPerson(personAddRequest2);
         var personResponse3 = _personService.AddPerson(personAddRequest3);
-        List<PersonResponse> personResponsesFromAdd = [personResponse1, personResponse2,personResponse3];
-        
+        List<PersonResponse> personResponsesFromAdd = [personResponse1, personResponse2, personResponse3];
+
         // Act
         var personsFromSearch = _personService.GetFilteredPersons(nameof(Person.Name), "Jame");
 
@@ -298,19 +298,19 @@ public class PersonServiceTest
         {
             if (personFromAdd.Name != null)
             {
-                if(personFromAdd.Name.Contains("Jame",StringComparison.OrdinalIgnoreCase))
+                if (personFromAdd.Name.Contains("Jame", StringComparison.OrdinalIgnoreCase))
                 {
                     Assert.Contains(personFromAdd, personsFromSearch);
                 }
             }
-            
+
         }
     }
 
     #endregion
-    
+
     #region GetSortedPersons
-    
+
     // When we sort based on the Name in DESC,it should return 
     // persons list in descending on Name
 
@@ -344,7 +344,7 @@ public class PersonServiceTest
             CountryId = countryResponse2.CountryId,
             ReceiveNewsLetter = false,
         };
-        
+
         PersonAddRequest personAddRequest3 = new()
         {
             Name = "James Vogan",
@@ -358,36 +358,35 @@ public class PersonServiceTest
         var personResponse1 = _personService.AddPerson(personAddRequest1);
         var personResponse2 = _personService.AddPerson(personAddRequest2);
         var personResponse3 = _personService.AddPerson(personAddRequest3);
-        List<PersonResponse> personResponsesFromAdd = [personResponse1, personResponse2,personResponse3];
+        List<PersonResponse> personResponsesFromAdd = [personResponse1, personResponse2, personResponse3];
         List<PersonResponse> allPersons = _personService.GetAllPersons();
         // Act
-        var personsFromSort = _personService.GetSortedPersons(allPersons, nameof(Person.Name), SortOrderEnum.Descending);
+        var personsFromSort =
+            _personService.GetSortedPersons(allPersons, nameof(Person.Name), SortOrderEnum.Descending);
         personResponsesFromAdd = personResponsesFromAdd.OrderByDescending(temp => temp.Name).ToList();
 
         // Assert
         for (int i = 0; i < personResponsesFromAdd.Count; i++)
         {
-            Assert.Equal(personResponsesFromAdd[i],personsFromSort[i]);
+            Assert.Equal(personResponsesFromAdd[i], personsFromSort[i]);
         }
     }
-    
+
     #endregion
 
     #region UpdatePerson
+
     // When we supply null as PersonUpdateRequest,it should throw ArgumentNullException
     [Fact]
     public void UpdatePerson_Empty()
     {
         // Arrange
         PersonUpdateRequest? personUpdateRequest = null;
-        
+
         // Act & Assert
-        Assert.Throws<ArgumentNullException>(() =>
-        {
-            _personService.UpdatePerson(personUpdateRequest);
-        });
+        Assert.Throws<ArgumentNullException>(() => { _personService.UpdatePerson(personUpdateRequest); });
     }
-    
+
     // When we supply invalid person id,it should throw ArgumentException
     [Fact]
     public void UpdatePerson_InvalidId()
@@ -397,14 +396,11 @@ public class PersonServiceTest
         {
             PersonId = Guid.NewGuid()
         };
-        
+
         // Act & Assert
-        Assert.Throws<ArgumentException>(() =>
-        {
-            _personService.UpdatePerson(personUpdateRequest);
-        });
+        Assert.Throws<ArgumentException>(() => { _personService.UpdatePerson(personUpdateRequest); });
     }
-    
+
     // When PersonName is null,it should throw ArgumentException
     [Fact]
     public void UpdatePerson_NameIsNull()
@@ -435,7 +431,7 @@ public class PersonServiceTest
             _personService.UpdatePerson(personUpdateRequest);
         });
     }
-    
+
     // First,Add a new person and try to update the person name and email
     [Fact]
     public void UpdatePerson_ValidData()
@@ -468,4 +464,64 @@ public class PersonServiceTest
     }
 
     #endregion
+
+    #region DeletePerson
+
+    // When we try to delete without passing the id,it should throw ArgumentNullException
+    [Fact]
+    public void DeletePerson_NotFound()
+    {
+        // Arrange
+        var personID=Guid.NewGuid();
+        var personResponse = _personService.DeletePerson(personID);
+        Assert.False(personResponse);
+    }
+
+    // When we try to delete non-existent item,it should return false
+    [Fact]
+    public void DeletePerson_NonExistingPerson()
+    {
+        // Arrange
+        var personId = Guid.NewGuid();
+
+        // Act
+        var response = _personService.DeletePerson(personId);
+
+        // Assert
+        Assert.False(response);
+    }
+
+    // When we delete the available person it should delete
+    // And return true
+
+    [Fact]
+    public void DeletePerson_ValidPerson()
+    {
+        // Arrange
+        var countryAddRequest = new CountryAddRequest()
+        {
+            CountryName = "Nepal"
+        };
+        var countryResponse=_countriesService.AddCountry(countryAddRequest);
+        var personAddRequest = new PersonAddRequest()
+        {
+            Name = "James",
+            Email = "james@example.com",
+            Gender = GenderOptions.Male,
+            Address = "Biratnagar",
+            CountryId =  countryResponse?.CountryId,
+            ReceiveNewsLetter = true,
+            DateOfBirth =  DateTime.Parse("1997-03-06")
+        };
+
+        var addedPerson = _personService.AddPerson(personAddRequest);
+        
+        // Act
+        var result=_personService.DeletePerson(addedPerson?.Id);
+        // Assert
+        Assert.True(result);
+
+    }
+
+#endregion
 };

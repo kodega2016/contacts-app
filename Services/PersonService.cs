@@ -206,6 +206,17 @@ public class PersonService : IPersonService
         return matchingPerson.ToPersonResponse();
     }
 
+    public bool DeletePerson(Guid? personId)
+    {
+        if (personId == null) return false;
+        
+        var person = _persons.FirstOrDefault(person => person.PersonId == personId);
+        if (person == null) return false;
+        
+        _persons.Remove(person);
+        return true;
+    }
+
     public PersonResponse? GetPersonByPersonId(Guid? personId)
     {
         if (personId == null) return null;
