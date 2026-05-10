@@ -2,6 +2,7 @@ using System.ComponentModel.DataAnnotations;
 using Entities;
 using ServiceContracts;
 using ServiceContracts.DTO;
+using ServiceContracts.Enums;
 
 namespace Services;
 
@@ -105,6 +106,76 @@ public class PersonService : IPersonService
         }
 
         return matchingPersons;
+    }
+
+    public List<PersonResponse> GetSortedPersons(List<PersonResponse> allPersons, string sortBy, SortOrderEnum sortOrder)
+    {
+        if(string.IsNullOrEmpty(sortBy)){
+            return allPersons;
+        }
+
+        List<PersonResponse> sortedPersons = (sortBy, sortOrder) switch
+        {
+            (nameof(PersonResponse.Name), SortOrderEnum.Ascending) =>
+                allPersons.OrderBy(temp => temp.Name, StringComparer.OrdinalIgnoreCase).ToList(),
+
+            (nameof(PersonResponse.Name), SortOrderEnum.Descending) =>
+                allPersons.OrderByDescending(temp => temp.Name, StringComparer.OrdinalIgnoreCase).ToList(),
+                
+                    (nameof(PersonResponse.Email), SortOrderEnum.Ascending) =>
+            allPersons.OrderBy(temp => temp.Email, StringComparer.OrdinalIgnoreCase).ToList(),
+            
+            (nameof(PersonResponse.Email), SortOrderEnum.Descending) =>
+                allPersons.OrderByDescending(temp => temp.Email, StringComparer.OrdinalIgnoreCase).ToList(),
+            
+            
+            (nameof(PersonResponse.DateOfBirth), SortOrderEnum.Ascending) =>
+                allPersons.OrderBy(temp => temp.DateOfBirth).ToList(),
+            
+            (nameof(PersonResponse.DateOfBirth), SortOrderEnum.Descending) =>
+                allPersons.OrderByDescending(temp => temp.DateOfBirth).ToList(),
+            
+            
+             
+            (nameof(PersonResponse.Age), SortOrderEnum.Ascending) =>
+                allPersons.OrderBy(temp => temp.Age).ToList(),
+            
+            (nameof(PersonResponse.Age), SortOrderEnum.Descending) =>
+                allPersons.OrderByDescending(temp => temp.Age).ToList(),
+
+            
+            (nameof(PersonResponse.Gender), SortOrderEnum.Ascending) =>
+                allPersons.OrderBy(temp => temp.Gender).ToList(),
+            
+            (nameof(PersonResponse.Gender), SortOrderEnum.Descending) =>
+                allPersons.OrderByDescending(temp => temp.Gender).ToList(),
+            
+            (nameof(PersonResponse.Country), SortOrderEnum.Ascending) =>
+                allPersons.OrderBy(temp => temp.Country).ToList(),
+            
+            (nameof(PersonResponse.Country), SortOrderEnum.Descending) =>
+                allPersons.OrderByDescending(temp => temp.Country).ToList(),
+            
+               
+            (nameof(PersonResponse.Address), SortOrderEnum.Descending) =>
+                allPersons.OrderByDescending(temp => temp.Address).ToList(),
+            
+            
+            (nameof(PersonResponse.ReceiveNewsLetter), SortOrderEnum.Ascending) =>
+                allPersons.OrderByDescending(temp => temp.ReceiveNewsLetter).ToList(),
+            
+               
+            (nameof(PersonResponse.ReceiveNewsLetter), SortOrderEnum.Descending) =>
+                allPersons.OrderByDescending(temp => temp.ReceiveNewsLetter).ToList(),
+            
+            _=>allPersons
+            
+            
+            
+        };
+
+        return sortedPersons;
+
     }
 
     public PersonResponse? GetPersonByPersonId(Guid? personId)

@@ -58,7 +58,7 @@ public class PersonServiceTest
         {
             Name = "James",
             Email = "example@example.com",
-            BirthDate = DateTime.Parse("1997-03-06"),
+            DateOfBirth = DateTime.Parse("1997-03-06"),
             Gender = GenderOptions.Male,
             Address = "Madhumalla Morang",
             CountryId = Guid.NewGuid(),
@@ -103,7 +103,7 @@ public class PersonServiceTest
         {
             Name = "James",
             Email = "example@example.com",
-            BirthDate = DateTime.Parse("1997-03-06"),
+            DateOfBirth = DateTime.Parse("1997-03-06"),
             Gender = GenderOptions.Male,
             Address = "Madhumalla Morang",
             CountryId = countryResponse.CountryId,
@@ -146,7 +146,7 @@ public class PersonServiceTest
         {
             Name = "James",
             Email = "example@example.com",
-            BirthDate = DateTime.Parse("1997-03-06"),
+            DateOfBirth = DateTime.Parse("1997-03-06"),
             Gender = GenderOptions.Male,
             Address = "Madhumalla Morang",
             CountryId = countryResponse1.CountryId,
@@ -157,7 +157,7 @@ public class PersonServiceTest
         {
             Name = "Yash",
             Email = "yash@example.com",
-            BirthDate = DateTime.Parse("1997-03-06"),
+            DateOfBirth = DateTime.Parse("1997-03-06"),
             Gender = GenderOptions.Male,
             Address = "New Delli",
             CountryId = countryResponse2.CountryId,
@@ -202,7 +202,7 @@ public class PersonServiceTest
         {
             Name = "James",
             Email = "example@example.com",
-            BirthDate = DateTime.Parse("1997-03-06"),
+            DateOfBirth = DateTime.Parse("1997-03-06"),
             Gender = GenderOptions.Male,
             Address = "Madhumalla Morang",
             CountryId = countryResponse1.CountryId,
@@ -213,7 +213,7 @@ public class PersonServiceTest
         {
             Name = "Yash",
             Email = "yash@example.com",
-            BirthDate = DateTime.Parse("1997-03-06"),
+            DateOfBirth = DateTime.Parse("1997-03-06"),
             Gender = GenderOptions.Male,
             Address = "New Delli",
             CountryId = countryResponse2.CountryId,
@@ -257,7 +257,7 @@ public class PersonServiceTest
         {
             Name = "James",
             Email = "example@example.com",
-            BirthDate = DateTime.Parse("1997-03-06"),
+            DateOfBirth = DateTime.Parse("1997-03-06"),
             Gender = GenderOptions.Male,
             Address = "Madhumalla Morang",
             CountryId = countryResponse1.CountryId,
@@ -268,7 +268,7 @@ public class PersonServiceTest
         {
             Name = "Yash",
             Email = "yash@example.com",
-            BirthDate = DateTime.Parse("1997-03-06"),
+            DateOfBirth = DateTime.Parse("1997-03-06"),
             Gender = GenderOptions.Male,
             Address = "New Delli",
             CountryId = countryResponse2.CountryId,
@@ -279,7 +279,7 @@ public class PersonServiceTest
         {
             Name = "James Vogan",
             Email = "vogan@example.com",
-            BirthDate = DateTime.Parse("1997-03-06"),
+            DateOfBirth = DateTime.Parse("1997-03-06"),
             Gender = GenderOptions.Male,
             Address = "Biratnagar",
             CountryId = countryResponse2.CountryId,
@@ -307,5 +307,69 @@ public class PersonServiceTest
         }
     }
 
+    #endregion
+    
+    #region GetSortedPersons
+    
+    // When we sort based on the Name in DESC,it should return 
+    // persons list in descending on Name
+
+    public void GetSortedPersons()
+    {
+        // Arrange
+        CountryAddRequest? countryAddRequest1 = new() { CountryName = "Nepal" };
+        CountryAddRequest? countryAddRequest2 = new() { CountryName = "India" };
+
+        var countryResponse1 = _countriesService.AddCountry(countryAddRequest1);
+        var countryResponse2 = _countriesService.AddCountry(countryAddRequest2);
+
+        PersonAddRequest personAddRequest1 = new()
+        {
+            Name = "James",
+            Email = "example@example.com",
+            DateOfBirth = DateTime.Parse("1997-03-06"),
+            Gender = GenderOptions.Male,
+            Address = "Madhumalla Morang",
+            CountryId = countryResponse1.CountryId,
+            ReceiveNewsLetter = true,
+        };
+
+        PersonAddRequest personAddRequest2 = new()
+        {
+            Name = "Yash",
+            Email = "yash@example.com",
+            DateOfBirth = DateTime.Parse("1997-03-06"),
+            Gender = GenderOptions.Male,
+            Address = "New Delli",
+            CountryId = countryResponse2.CountryId,
+            ReceiveNewsLetter = false,
+        };
+        
+        PersonAddRequest personAddRequest3 = new()
+        {
+            Name = "James Vogan",
+            Email = "vogan@example.com",
+            DateOfBirth = DateTime.Parse("1997-03-06"),
+            Gender = GenderOptions.Male,
+            Address = "Biratnagar",
+            CountryId = countryResponse2.CountryId,
+            ReceiveNewsLetter = true,
+        };
+        var personResponse1 = _personService.AddPerson(personAddRequest1);
+        var personResponse2 = _personService.AddPerson(personAddRequest2);
+        var personResponse3 = _personService.AddPerson(personAddRequest3);
+        List<PersonResponse> personResponsesFromAdd = [personResponse1, personResponse2,personResponse3];
+        List<PersonResponse> allPersons = _personService.GetAllPersons();
+        // Act
+        var personsFromSort = _personService.GetSortedPersons(allPersons, nameof(Person.Name), SortOrderEnum.Descending);
+        personResponsesFromAdd = personResponsesFromAdd.OrderByDescending(temp => temp.Name).ToList();
+
+        // Assert
+        for (int i = 0; i < personResponsesFromAdd.Count; i++)
+        {
+            Assert.Equal(personResponsesFromAdd[i],personsFromSort[i]);
+        }
+    }
+    
     #endregion
 };

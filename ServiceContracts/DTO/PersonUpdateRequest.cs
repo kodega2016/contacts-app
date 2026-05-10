@@ -3,32 +3,36 @@ using Entities;
 using ServiceContracts.Enums;
 
 namespace ServiceContracts.DTO;
+
 /// <summary>
-/// Acts as a DTO for inserting a new person
+/// Represents the DTO class that contains the person details to
+/// update
 /// </summary>
-public class PersonAddRequest
+public class PersonUpdateRequest
 {
-    [Required(ErrorMessage ="Name cannot be blank")]
+    [Required(ErrorMessage = "Person Id cannot be blank")]
+    public Guid PersonId { get; set; }
+
+    [Required(ErrorMessage = "Name cannot be blank")]
     public string? Name { get; set; }
-    
-    [Required(ErrorMessage ="Email value should be a valid email")]
-    [EmailAddress(ErrorMessage ="Email value should be a valid email")]
-    public string?Email { get; set; }
+
+    [Required] [EmailAddress] public string? Email { get; set; }
+
     public DateTime? DateOfBirth { get; set; }
+
     public GenderOptions? Gender { get; set; }
+
     public Guid? CountryId { get; set; }
+
     public string? Address { get; set; }
+
     public bool ReceiveNewsLetter { get; set; }
 
-
-    /// <summary>
-    /// Converts the current object of PersonAddRequest into a new object ot Person type
-    /// </summary>
-    /// <returns></returns>
     public Person ToPerson()
     {
         return new Person()
         {
+            PersonId = PersonId,
             Name = Name,
             Email = Email,
             DateOfBirth = DateOfBirth,
@@ -37,5 +41,4 @@ public class PersonAddRequest
             ReceiveNewsLetter = ReceiveNewsLetter,
         };
     }
-
 }
