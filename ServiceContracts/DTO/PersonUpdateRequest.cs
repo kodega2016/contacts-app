@@ -27,6 +27,11 @@ public class PersonUpdateRequest
     public string? Address { get; set; }
 
     public bool ReceiveNewsLetter { get; set; }
+    
+    /// <summary>
+    /// Converts the current object of PersonUpdateRequest into a new object ot Person type
+    /// </summary>
+    /// <returns></returns>
 
     public Person ToPerson()
     {

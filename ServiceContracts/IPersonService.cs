@@ -49,4 +49,12 @@ public interface IPersonService
     /// <returns>Returns sorted persons as PersonResponse list</returns>
 
     List<PersonResponse> GetSortedPersons(List<PersonResponse>allPersons,string sortBy,SortOrderEnum sortOrder);
+
+    /// <summary>
+    /// Updates the specified person details based on the given
+    /// person ID
+    /// </summary>
+    /// <param name="request">Person details to update,including the person id</param>
+    /// <returns>Return the person response object</returns>
+    PersonResponse? UpdatePerson(PersonUpdateRequest? request);
 }

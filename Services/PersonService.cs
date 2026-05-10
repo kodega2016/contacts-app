@@ -3,6 +3,7 @@ using Entities;
 using ServiceContracts;
 using ServiceContracts.DTO;
 using ServiceContracts.Enums;
+using Services.Helpers;
 
 namespace Services;
 
@@ -24,18 +25,21 @@ public class PersonService : IPersonService
     {
         // check if PersonAddRequest is not null
         ArgumentNullException.ThrowIfNull(request);
+        
+        
 
 
         // Model Validations
-        ValidationContext validationContext = new ValidationContext(request);
-        List<ValidationResult> validationResults = new List<ValidationResult>();
-
-
-        bool isValid = Validator.TryValidateObject(request, validationContext, validationResults, true);
-        if (!isValid)
-        {
-            throw new ArgumentException(validationResults.FirstOrDefault()?.ErrorMessage);
-        }
+        ValidationHelpers.ModelValidation(request);
+        // ValidationContext validationContext = new ValidationContext(request);
+        // List<ValidationResult> validationResults = new List<ValidationResult>();
+        //
+        //
+        // bool isValid = Validator.TryValidateObject(request, validationContext, validationResults, true);
+        // if (!isValid)
+        // {
+        //     throw new ArgumentException(validationResults.FirstOrDefault()?.ErrorMessage);
+        // }
 
         // Validate Name
         // if (string.IsNullOrWhiteSpace(request.Name))
@@ -176,6 +180,30 @@ public class PersonService : IPersonService
 
         return sortedPersons;
 
+    }
+
+    public PersonResponse? UpdatePerson(PersonUpdateRequest? request)
+    {
+        if (request == null) throw new ArgumentNullException(nameof(request));
+        if (request.Name == null) throw new ArgumentException(nameof(request.Name));
+
+
+        // Validation
+        ValidationHelpers.ModelValidation(request);
+
+        // get matching person to update
+        var matchingPerson = _persons.FirstOrDefault(person => person.PersonId == request.PersonId);
+        if (matchingPerson == null) throw new ArgumentException("Given person id does not exist");
+        
+        // update all the details
+        matchingPerson.Name=request.Name;
+        matchingPerson.Email=request.Email;
+        matchingPerson.DateOfBirth=request.DateOfBirth;
+        matchingPerson.Gender=request.Gender.ToString();
+        matchingPerson.CountryId=request.CountryId;
+        matchingPerson.Address=request.Address;
+        matchingPerson.ReceiveNewsLetter=request.ReceiveNewsLetter;
+        return matchingPerson.ToPersonResponse();
     }
 
     public PersonResponse? GetPersonByPersonId(Guid? personId)
