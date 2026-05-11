@@ -8,10 +8,12 @@ namespace ContactsApp.Controllers;
 public class PersonsController : Controller
 {
     private readonly IPersonService _personService;
+    private readonly ICountriesService _countriesService;
 
-    public PersonsController(IPersonService personService)
+    public PersonsController(IPersonService personService,ICountriesService countriesService)
     {
         _personService = personService;
+        _countriesService=countriesService;
     }
 
     // GET
@@ -46,5 +48,14 @@ public class PersonsController : Controller
         ViewBag.SortBy = sortBy;
         ViewBag.SortOrder = sortOrder;
         return View(persons);
+    }
+
+    [Route("/persons/create")]
+    [HttpGet]
+    public IActionResult Create()
+    {
+        var countries=_countriesService.GetCountries();
+        ViewBag.Countires=countries;
+        return View();
     }
 }
