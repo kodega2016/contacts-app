@@ -2,92 +2,140 @@
 
 
 @{
-    ViewBag.Title = "All Persons";
+  ViewBag.Title = "All Persons";
 }
 
-@section Styles{
-    <link rel="stylesheet" href="https://cdn.datatables.net/2.3.8/css/dataTables.dataTables.min.css"/>
+@section Styles {
+  <link rel="stylesheet" href="https://cdn.datatables.net/2.3.8/css/dataTables.dataTables.min.css" />
 }
 
-@section Scripts{
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+@section Scripts {
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
-    <script src="https://cdn.datatables.net/2.3.8/js/dataTables.min.js"></script>
-    <script>
-        new DataTable('#persons');
-    </script>
+  <script src="https://cdn.datatables.net/2.3.8/js/dataTables.min.js"></script>
+  <script>
+    new DataTable('#persons');
+  </script>
 }
 
 
-<div class="row">
-    <div class="col-md-12">
-        <h2>All Persons
-            <a href="/persons/create" class="btn btn-outline-info">Add New Person</a>
-        </h2>
-        
-        <form method="get" action="/persons/index" class="row g-2 mb-3 mt-2">
-            <div class="col-md-3">
-                <select name="searchBy" class="form-select" value="">
-                    @foreach (var field in @ViewBag.searchFields)
-                    {
-                        if (@ViewBag.searchBy == field.Key)
-                        {
-                            <option value="@field.Key" selected>@field.Value</option>    
-                        }
-                        else
-                        {
-                            <option value="@field.Key">@field.Value</option>
-                        }
-                        
-                        
-                    }
-                </select>
-            </div>
-            <div class="col-md-6">
-                <input
-                    type="text"
-                    name="searchString"
-                    class="form-control"
-                    placeholder="Search..."
-                    value="@ViewBag.searchString"
-                />
-            </div>
-            <div class="col-md-3">
-                <button type="submit" class="btn btn-primary w-100">
-                    Search
-                </button>
-            </div>
-        </form>
-        <table class="table table-bordered table-striped mt-2">
-            <thead>
-            <tr>
-                <th scope="col">#</th>
-                <th scope="col">Name</th>
-                <th scope="col">Email</th>
-                <th scope="col">Date Of Birth</th>
-                <th scope="col">Age</th>
-                <th scope="col">Gender</th>
-                <th scope="col">Country</th>
-                <th scope="col">Address</th>
-                <th scope="col">Receive News Letters</th>
-            </tr>
-            </thead>
-            <tbody>
-            @foreach (var person in Model)
-            {
-                <tr>
-                    <th scope="row">1</th>
-                    <td>@person.Name</td>
-                    <td>@person.Email</td>
-                    <td>@person.DateOfBirth?.ToString("d-yyyy-MM")</td>
-                    <td>@person.Age</td>
-                    <td>@person.Gender</td>
-                    <td>@person.Country</td>
-                    <td>@person.Address</td>
-                    <td>@person.ReceiveNewsLetter</td>
-                </tr>
-            }
-            </tbody>
-        </table>
+<div class="container py-4">
+  <!-- Header -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h2 class="mb-1">All Persons</h2>
+      <p class="text-muted small mb-0">Manage your contact list</p>
     </div>
+    <a href="/persons/create" class="btn btn-success">
+      <i class="fas fa-plus"></i> Add Person
+    </a>
+  </div>
+
+  <!-- Search Form -->
+  <div class="card mb-4">
+    <div class="card-body">
+      <form method="get" action="/persons/index">
+        <div class="row g-3">
+          <div class="col-md-3">
+            <label for="searchBy" class="form-label small fw-600">Search By</label>
+            <select name="searchBy" id="searchBy" class="form-select form-select-sm">
+              @foreach (var field in @ViewBag.searchFields)
+              {
+                if (@ViewBag.searchBy == field.Key)
+                {
+                  <option value="@field.Key" selected>@field.Value</option>
+                }
+                else
+                {
+                  <option value="@field.Key">@field.Value</option>
+                }
+              }
+            </select>
+          </div>
+          <div class="col-md-6">
+            <label for="searchString" class="form-label small fw-600">Search Term</label>
+            <input type="text" id="searchString" name="searchString" class="form-control form-control-sm" 
+                   placeholder="Enter keyword..." value="@ViewBag.searchString" />
+          </div>
+          <div class="col-md-3">
+            <label class="form-label small fw-600">&nbsp;</label>
+            <button type="submit" class="btn btn-primary btn-sm w-100">
+              <i class="fas fa-search"></i> Search
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Table -->
+  <div class="card">
+    <div class="table-responsive">
+      <table class="table table-hover align-middle mb-0" id="persons">
+        <thead class="table-dark">
+          <tr>
+            @if (ViewBag.sortBy == nameof(PersonResponse.Name) && ViewBag.sortOrder==SortOrderEnum.Ascending)
+            {
+              <th>
+                <a href="/persons/index?searchBy=@ViewBag.searchBy&searchString=@ViewBag.searchString&sortBy=@ViewBag.SortBy&sortOrder=Descending" class="text-white text-decoration-none">
+                  Name <i class="fas fa-arrow-up ms-1" style="font-size: 0.75rem;"></i>
+                </a>
+              </th>
+            }
+            else if(ViewBag.sortBy == nameof(PersonResponse.Name) && ViewBag.sortOrder==SortOrderEnum.Descending)
+            {
+              <th>
+                <a href="/persons/index?searchBy=@ViewBag.searchBy&searchString=@ViewBag.searchString&sortBy=@ViewBag.SortBy&sortOrder=Ascending" class="text-white text-decoration-none">
+                  Name <i class="fas fa-arrow-down ms-1" style="font-size: 0.75rem;"></i>
+                </a>
+              </th>
+            }
+            else
+            {
+              <th>Name</th>
+            }
+            <th>Email</th>
+            <th>Date of Birth</th>
+            <th>Age</th>
+            <th>Gender</th>
+            <th>Address</th>
+            <th>Newsletter</th>
+            <th style="width: 110px;" class="text-center">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          @foreach (var person in Model)
+          {
+            <tr>
+              <td><strong>@person.Name</strong></td>
+              <td>@person.Email</td>
+              <td>@person.DateOfBirth?.ToString("dd MMM yyyy")</td>
+              <td>@person.Age</td>
+              <td>@person.Gender</td>
+              <td>@person.Address</td>
+              <td>
+                @if (@person.ReceiveNewsLetter)
+                {
+                  <span class="badge bg-success"><i class="fas fa-check me-1"></i>Yes</span>
+                }
+                else
+                {
+                  <span class="badge bg-secondary"><i class="fas fa-times me-1"></i>No</span>
+                }
+              </td>
+              <td class="text-center">
+                <a href="/persons/edit/@person.Id" class="btn btn-primary btn-sm" title="Edit">
+                  <i class="fas fa-edit"></i>
+                </a>
+                <a href="/persons/delete/@person.Id" class="btn btn-danger btn-sm" title="Delete" 
+                   onclick="return confirm('Are you sure?')">
+                  <i class="fas fa-trash"></i>
+                </a>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
 </div>

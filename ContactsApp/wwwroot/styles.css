@@ -1,6 +1,165 @@
-@import url('https://fonts.googleapis.com/css2?family=Bungee&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@600;700;800&display=swap');
 
+:root {
+  --bs-body-font-family: "Inter", sans-serif;
+}
 
-*{
-    font-family: "Bungee", sans-serif;
+* {
+  font-family: "Inter", sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: "Poppins", sans-serif;
+  font-weight: 700;
+}
+
+/* Navbar styling */
+.navbar {
+  background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%) !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.navbar.bg-primary {
+  background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%) !important;
+}
+
+.navbar-brand {
+  font-family: "Poppins", sans-serif;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: white !important;
+}
+
+.nav-link {
+  color: rgba(255, 255, 255, 0.85) !important;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.nav-link:hover {
+  color: white !important;
+}
+
+.navbar-dark .nav-link.active {
+  color: white !important;
+  font-weight: 600;
+}
+
+/* Form controls */
+.form-control, .form-select {
+  border-radius: 0.5rem;
+  border: 1px solid #e5e7eb;
+  transition: all 0.3s ease;
+}
+
+.form-control:focus, .form-select:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+/* Button styling */
+.btn {
+  border-radius: 0.5rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.btn-primary {
+  background-color: #3b82f6;
+  border-color: #3b82f6;
+}
+
+.btn-primary:hover {
+  background-color: #1e40af;
+  border-color: #1e40af;
+  transform: translateY(-2px);
+}
+
+.btn-success {
+  background-color: #10b981;
+  border-color: #10b981;
+}
+
+.btn-success:hover {
+  background-color: #059669;
+  border-color: #059669;
+  transform: translateY(-2px);
+}
+
+.btn-danger {
+  background-color: #ef4444;
+  border-color: #ef4444;
+}
+
+.btn-danger:hover {
+  background-color: #dc2626;
+  border-color: #dc2626;
+  transform: translateY(-2px);
+}
+
+/* Table styling */
+.table {
+  border-radius: 0.5rem;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.table thead {
+  background-color: #1f2937;
+  color: white;
+}
+
+.table thead th {
+  border: none;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  letter-spacing: 0.5px;
+  padding: 1rem 0.75rem;
+}
+
+.table tbody tr {
+  border-color: #f3f4f6;
+  transition: background-color 0.3s ease;
+}
+
+.table tbody tr:hover {
+  background-color: #f3f4f6;
+}
+
+.table tbody td {
+  padding: 1rem 0.75rem;
+  vertical-align: middle;
+}
+
+/* Badge styling */
+.badge {
+  border-radius: 9999px;
+  font-weight: 600;
+  padding: 0.35rem 0.75rem;
+}
+
+/* Card styling */
+.card {
+  border: none;
+  border-radius: 0.75rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.3s ease;
+}
+
+.card:hover {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Utility spacing */
+.gap-x-2 {
+  gap: 0.5rem;
+}
+
+/* Header section */
+.page-header {
+  margin-bottom: 2rem;
 }
