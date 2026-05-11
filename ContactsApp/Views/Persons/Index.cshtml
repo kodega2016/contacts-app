@@ -1,9 +1,23 @@
-@model IEnumerable<Entities.Person>
+@model IEnumerable<PersonResponse>
 
 
 @{
     ViewBag.Title = "All Persons";
 }
+
+@section Styles{
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.3.8/css/dataTables.dataTables.min.css"/>
+}
+
+@section Scripts{
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+    <script src="https://cdn.datatables.net/2.3.8/js/dataTables.min.js"></script>
+    <script>
+        new DataTable('#persons');
+    </script>
+}
+
 
 <div class="row">
     <div class="col-md-12">
@@ -11,34 +25,36 @@
             <a href="/persons/create" class="btn btn-outline-info">Add New Person</a>
         </h2>
         
-        <table class="table table-bordered table-striped mt-2">
+        <table class="table table-bordered table-striped mt-2" id="persons">
             <thead>
             <tr>
                 <th scope="col">#</th>
                 <th scope="col">Name</th>
                 <th scope="col">Email</th>
                 <th scope="col">Date Of Birth</th>
+                <th scope="col">Age</th>
+                <th scope="col">Gender</th>
+                <th scope="col">Country</th>
+                <th scope="col">Address</th>
+                <th scope="col">Receive News Letters</th>
             </tr>
             </thead>
             <tbody>
-            <tr>
-                <th scope="row">1</th>
-                <td>Mark</td>
-                <td>Otto</td>
-                <td>mdo</td>
-            </tr>
-            <tr>
-                <th scope="row">2</th>
-                <td>Jacob</td>
-                <td>Thornton</td>
-                <td>fat</td>
-            </tr>
-            <tr>
-                <th scope="row">3</th>
-                <td>John</td>
-                <td>Doe</td>
-                <td>social</td>
-            </tr>
+            @foreach (var person in Model)
+            {
+                <tr>
+                    <th scope="row">1</th>
+                    <td>@person.Name</td>
+                    <td>@person.Email</td>
+                    <td>@person.DateOfBirth?.ToString("d-yyyy-MM")</td>
+                    <td>@person.Age</td>
+                    <td>@person.Gender</td>
+                    <td>@person.Country</td>
+                    <td>@person.Address</td>
+                    <td>@person.ReceiveNewsLetter</td>
+                </tr>
+                
+            }
             </tbody>
         </table>
     </div>
