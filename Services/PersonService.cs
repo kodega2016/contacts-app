@@ -12,10 +12,77 @@ public class PersonService : IPersonService
     private readonly List<Person> _persons;
     private readonly ICountriesService _countriesService;
 
-    public PersonService(ICountriesService countriesService)
+    public PersonService(ICountriesService countriesService,bool initialize=true)
     {
         _persons = new List<Person>() { };
         _countriesService = countriesService;
+
+        if (initialize)
+        {
+            _persons.AddRange(new List<Person>()
+            {
+                new Person()
+                {
+                    PersonId = Guid.Parse("F3444926-80FB-416A-8BCC-F27CE006060C"),
+                    Name = "John Doe",
+                    Email = "john.doe@example.com",
+                    DateOfBirth = new DateTime(1995, 5, 12),
+                    Gender = "Male",
+                    CountryId = Guid.Parse("11111111-1111-1111-1111-111111111111"),
+                    Address = "123 Main Street, New York",
+                    ReceiveNewsLetter = true
+                },
+
+                new Person()
+                {
+                    PersonId = Guid.Parse("0E9F57DC-63F1-4F59-8A04-577793E5FDDA"),
+                    Name = "Emma Watson",
+                    Email = "emma.watson@example.com",
+                    DateOfBirth = new DateTime(1998, 8, 25),
+                    Gender = "Female",
+                    CountryId = Guid.Parse("22222222-2222-2222-2222-222222222222"),
+                    Address = "45 Queen Street, London",
+                    ReceiveNewsLetter = false
+                },
+
+                new Person()
+                {
+                    PersonId = Guid.Parse("8084A652-F83A-47CA-9885-1263D8676334"),
+                    Name = "Michael Smith",
+                    Email = "michael.smith@example.com",
+                    DateOfBirth = new DateTime(1989, 11, 3),
+                    Gender = "Male",
+                    CountryId = Guid.Parse("33333333-3333-3333-3333-333333333333"),
+                    Address = "78 George Street, Sydney",
+                    ReceiveNewsLetter = true
+                },
+
+                new Person()
+                {
+                    PersonId = Guid.Parse("33A7C9B8-7266-4691-BF36-21D6FFD06DBB"),
+                    Name = "Sophia Johnson",
+                    Email = "sophia.johnson@example.com",
+                    DateOfBirth = new DateTime(2001, 2, 14),
+                    Gender = "Female",
+                    CountryId = Guid.Parse("44444444-4444-4444-4444-444444444444"),
+                    Address = "12 Sunset Blvd, Los Angeles",
+                    ReceiveNewsLetter = false
+                },
+
+                new Person()
+                {
+                    PersonId = Guid.NewGuid(),
+                    Name = "David Brown",
+                    Email = "david.brown@example.com",
+                    DateOfBirth = new DateTime(1993, 7, 9),
+                    Gender = "Male",
+                    CountryId = Guid.Parse("55555555-5555-5555-5555-555555555555"),
+                    Address = "99 King Street, Toronto",
+                    ReceiveNewsLetter = true
+                }
+            });
+        }
+        
     }
 
 

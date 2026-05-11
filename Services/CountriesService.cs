@@ -9,9 +9,30 @@ public class CountriesService:ICountriesService
 {
     private readonly List<Country> _countries;
 
-    public CountriesService()
+    public CountriesService(bool initialize=true)
     {
         _countries = new List<Country>();
+        if (initialize)
+        {
+            _countries.AddRange(new List<Country>()
+            {
+                new Country()
+                {
+                    CountryID = Guid.Parse("970909DE-5FDB-4DEE-91C6-B5945C5525EC"),
+                    CountryName = "United Kingdom",
+                },
+                new Country()
+                {
+                    CountryID = Guid.Parse("3D1E7784-F89D-4D73-9BE3-2756C619D876"),
+                    CountryName = "United States",
+                },
+                new Country()
+                {
+                    CountryID = Guid.Parse("AF90F37D-DFB4-4514-AB16-3A088A2994C7"),
+                    CountryName = "Nepal",
+                }
+            });
+        }
     }
     public CountryResponse AddCountry(CountryAddRequest? countryAddRequest)
     {
