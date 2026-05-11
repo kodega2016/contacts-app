@@ -27,17 +27,20 @@
         
         <form method="get" action="/persons/index" class="row g-2 mb-3 mt-2">
             <div class="col-md-3">
-                <select name="searchBy" class="form-select">
+                <select name="searchBy" class="form-select" value="">
                     @foreach (var field in @ViewBag.searchFields)
                     {
-                        <option value="@field.Key">@field.Value</option>
+                        if (@ViewBag.searchBy == field.Key)
+                        {
+                            <option value="@field.Key" selected>@field.Value</option>    
+                        }
+                        else
+                        {
+                            <option value="@field.Key">@field.Value</option>
+                        }
+                        
                         
                     }
-                    
-                    <option value="Email">Email</option>
-                    <option value="Gender">Gender</option>
-                    <option value="Country">Country</option>
-                    <option value="Address">Address</option>
                 </select>
             </div>
             <div class="col-md-6">
@@ -46,6 +49,7 @@
                     name="searchString"
                     class="form-control"
                     placeholder="Search..."
+                    value="@ViewBag.searchString"
                 />
             </div>
             <div class="col-md-3">

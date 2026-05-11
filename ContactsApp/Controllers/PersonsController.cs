@@ -18,7 +18,7 @@ public class PersonsController : Controller
     [HttpGet]
     [Route("persons/index")]
     [Route("/")]
-    public IActionResult Index()
+    public IActionResult Index(string searchBy,string?searchString)
     {
 
         var searchFields = new Dictionary<string, string>();
@@ -29,9 +29,12 @@ public class PersonsController : Controller
         searchFields.Add(nameof(PersonResponse.CountryId),"Country Id");
         searchFields.Add(nameof(PersonResponse.Address),"Address");
         ViewBag.SearchFields = searchFields;
+        ViewBag.searchBy = searchBy;
+        ViewBag.searchString = searchString;
         
         
-        List<PersonResponse> persons = _personService.GetAllPersons();
+        List<PersonResponse> persons = _personService.GetFilteredPersons(
+            searchBy, searchString);
         return View(persons);
     }
 }
