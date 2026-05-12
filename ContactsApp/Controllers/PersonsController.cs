@@ -103,4 +103,13 @@ public class PersonsController : Controller
         PersonResponse personResponse = _personService.AddPerson(request);
         return RedirectToAction("Index", "Persons");
     }
+
+
+    [Route("[action]/{id}")]
+    [HttpGet]
+    public IActionResult Edit(Guid id)
+    {
+        Console.WriteLine("Editing product:" + id);
+        return View();
+    }
 }

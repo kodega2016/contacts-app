@@ -419,6 +419,7 @@ public class PersonServiceTest
             CountryId = countryResponse?.CountryId,
             Email = "example@example.com",
             Gender = GenderOptions.Male,
+            DateOfBirth=DateTime.Parse("1997-03-06"),
         };
 
         var personResponse = _personService.AddPerson(personAddRequest);
@@ -450,6 +451,7 @@ public class PersonServiceTest
             CountryId = countryResponse?.CountryId,
             Email = "example@example.com",
             Gender = GenderOptions.Male,
+            DateOfBirth=DateTime.Parse("1997-03-06"),
         };
 
         var personResponse = _personService.AddPerson(personAddRequest);
