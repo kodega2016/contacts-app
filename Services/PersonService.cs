@@ -12,7 +12,7 @@ public class PersonService : IPersonService
     private readonly List<Person> _persons;
     private readonly ICountriesService _countriesService;
 
-    public PersonService(ICountriesService countriesService,bool initialize=true)
+    public PersonService(ICountriesService countriesService, bool initialize = true)
     {
         _persons = new List<Person>() { };
         _countriesService = countriesService;
@@ -82,7 +82,7 @@ public class PersonService : IPersonService
                 }
             });
         }
-        
+
     }
 
 
@@ -92,9 +92,6 @@ public class PersonService : IPersonService
     {
         // check if PersonAddRequest is not null
         ArgumentNullException.ThrowIfNull(request);
-        
-        
-
 
         // Model Validations
         ValidationHelpers.ModelValidation(request);
@@ -141,7 +138,7 @@ public class PersonService : IPersonService
         switch (searchBy)
         {
             case nameof(PersonResponse.Name):
-                matchingPersons=   allPersons.Where(temp =>
+                matchingPersons = allPersons.Where(temp =>
                     temp.Name?.Contains(searchString,
                         StringComparison.OrdinalIgnoreCase) == true
                 ).ToList();
@@ -193,7 +190,8 @@ public class PersonService : IPersonService
 
     public List<PersonResponse> GetSortedPersons(List<PersonResponse> allPersons, string sortBy, SortOrderEnum sortOrder)
     {
-        if(string.IsNullOrEmpty(sortBy)){
+        if (string.IsNullOrEmpty(sortBy))
+        {
             return allPersons;
         }
 
@@ -204,57 +202,57 @@ public class PersonService : IPersonService
 
             (nameof(PersonResponse.Name), SortOrderEnum.Descending) =>
                 allPersons.OrderByDescending(temp => temp.Name, StringComparer.OrdinalIgnoreCase).ToList(),
-                
-                    (nameof(PersonResponse.Email), SortOrderEnum.Ascending) =>
-            allPersons.OrderBy(temp => temp.Email, StringComparer.OrdinalIgnoreCase).ToList(),
-            
+
+            (nameof(PersonResponse.Email), SortOrderEnum.Ascending) =>
+    allPersons.OrderBy(temp => temp.Email, StringComparer.OrdinalIgnoreCase).ToList(),
+
             (nameof(PersonResponse.Email), SortOrderEnum.Descending) =>
                 allPersons.OrderByDescending(temp => temp.Email, StringComparer.OrdinalIgnoreCase).ToList(),
-            
-            
+
+
             (nameof(PersonResponse.DateOfBirth), SortOrderEnum.Ascending) =>
                 allPersons.OrderBy(temp => temp.DateOfBirth).ToList(),
-            
+
             (nameof(PersonResponse.DateOfBirth), SortOrderEnum.Descending) =>
                 allPersons.OrderByDescending(temp => temp.DateOfBirth).ToList(),
-            
-            
-             
+
+
+
             (nameof(PersonResponse.Age), SortOrderEnum.Ascending) =>
                 allPersons.OrderBy(temp => temp.Age).ToList(),
-            
+
             (nameof(PersonResponse.Age), SortOrderEnum.Descending) =>
                 allPersons.OrderByDescending(temp => temp.Age).ToList(),
 
-            
+
             (nameof(PersonResponse.Gender), SortOrderEnum.Ascending) =>
                 allPersons.OrderBy(temp => temp.Gender).ToList(),
-            
+
             (nameof(PersonResponse.Gender), SortOrderEnum.Descending) =>
                 allPersons.OrderByDescending(temp => temp.Gender).ToList(),
-            
+
             (nameof(PersonResponse.Country), SortOrderEnum.Ascending) =>
                 allPersons.OrderBy(temp => temp.Country).ToList(),
-            
+
             (nameof(PersonResponse.Country), SortOrderEnum.Descending) =>
                 allPersons.OrderByDescending(temp => temp.Country).ToList(),
-            
-               
+
+
             (nameof(PersonResponse.Address), SortOrderEnum.Descending) =>
                 allPersons.OrderByDescending(temp => temp.Address).ToList(),
-            
-            
+
+
             (nameof(PersonResponse.ReceiveNewsLetter), SortOrderEnum.Ascending) =>
                 allPersons.OrderByDescending(temp => temp.ReceiveNewsLetter).ToList(),
-            
-               
+
+
             (nameof(PersonResponse.ReceiveNewsLetter), SortOrderEnum.Descending) =>
                 allPersons.OrderByDescending(temp => temp.ReceiveNewsLetter).ToList(),
-            
-            _=>allPersons
-            
-            
-            
+
+            _ => allPersons
+
+
+
         };
 
         return sortedPersons;
@@ -273,15 +271,15 @@ public class PersonService : IPersonService
         // get matching person to update
         var matchingPerson = _persons.FirstOrDefault(person => person.PersonId == request.PersonId);
         if (matchingPerson == null) throw new ArgumentException("Given person id does not exist");
-        
+
         // update all the details
-        matchingPerson.Name=request.Name;
-        matchingPerson.Email=request.Email;
-        matchingPerson.DateOfBirth=request.DateOfBirth;
-        matchingPerson.Gender=request.Gender.ToString();
-        matchingPerson.CountryId=request.CountryId;
-        matchingPerson.Address=request.Address;
-        matchingPerson.ReceiveNewsLetter=request.ReceiveNewsLetter;
+        matchingPerson.Name = request.Name;
+        matchingPerson.Email = request.Email;
+        matchingPerson.DateOfBirth = request.DateOfBirth;
+        matchingPerson.Gender = request.Gender.ToString();
+        matchingPerson.CountryId = request.CountryId;
+        matchingPerson.Address = request.Address;
+        matchingPerson.ReceiveNewsLetter = request.ReceiveNewsLetter;
         return matchingPerson.ToPersonResponse();
     }
 

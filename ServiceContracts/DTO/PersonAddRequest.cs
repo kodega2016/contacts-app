@@ -46,6 +46,7 @@ public class PersonAddRequest
             Gender = Gender.ToString(),
             CountryId = CountryId,
             ReceiveNewsLetter = ReceiveNewsLetter,
+            Address = Address
         };
     }
 

@@ -109,7 +109,53 @@ public class PersonsController : Controller
     [HttpGet]
     public IActionResult Edit(Guid id)
     {
-        Console.WriteLine("Editing product:" + id);
+        PersonResponse? personResponse = _personService.GetPersonByPersonId(id);
+        if (personResponse == null)
+        {
+            return RedirectToAction("Index", "Persons");
+        }
+        var countries = _countriesService.GetCountries();
+        ViewBag.Countries = countries.Select(temp =>
+        {
+            return new SelectListItem()
+            {
+                Text = temp.CountryName,
+                Value = temp.CountryId.ToString(),
+            };
+        });
+
+        PersonUpdateRequest personUpdateRequest = personResponse.ToPersonUpdateRequest();
+        return View(personUpdateRequest);
+    }
+
+    [HttpPost]
+    [Route("[action]/{personId}")]
+    public IActionResult Edit(Guid personId, PersonUpdateRequest request)
+    {
+        PersonResponse? personResponse = _personService.GetPersonByPersonId(personId);
+
+        if (ModelState.IsValid)
+        {
+            PersonResponse? updatedPerson = _personService.UpdatePerson(request);
+            return RedirectToAction("Index", "Persons");
+        }
+        else
+        {
+            var countries = _countriesService.GetCountries();
+            ViewBag.Countries = countries.Select(temp =>
+            {
+                return new SelectListItem()
+                {
+                    Text = temp.CountryName,
+                    Value = temp.CountryId.ToString(),
+                };
+            });
+
+            ViewBag.Errors = ModelState.Values.SelectMany(v => v.Errors)
+                .Select(e => e.ErrorMessage).ToList();
+        }
+
         return View();
     }
 }
+

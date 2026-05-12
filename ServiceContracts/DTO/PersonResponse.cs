@@ -10,13 +10,13 @@ public class PersonResponse
 {
     public Guid Id { get; set; }
     public string? Name { get; set; }
-    public string?Email { get; set; }
-    public DateTime?DateOfBirth { get; set; }
-    public string?Gender { get; set; }
+    public string? Email { get; set; }
+    public DateTime? DateOfBirth { get; set; }
+    public string? Gender { get; set; }
     public Guid? CountryId { get; set; }
 
     public string? Country { get; set; }
-    public string?Address { get; set; }
+    public string? Address { get; set; }
     public int? Age { get; set; }
     public bool ReceiveNewsLetter { get; set; }
 
@@ -82,6 +82,7 @@ public static class PersonResponseExtensions
             Gender = person.Gender,
             Address = person.Address,
             ReceiveNewsLetter = person.ReceiveNewsLetter,
+            CountryId = person.CountryId,
             Age = person.DateOfBirth != null
                 ? (int?)Math.Round((DateTime.Now - person.DateOfBirth.Value).TotalDays / 365.25)
                 : null,
