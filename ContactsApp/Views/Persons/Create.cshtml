@@ -14,14 +14,16 @@
   <!-- Form Card -->
   <div class="card">
     <div class="card-body">
-        @if(ViewBag.Errors!=null){
-            @foreach(var error in ViewBag.Errors){
-                <li>@error</li>
-            }
+      @if (ViewBag.Errors != null)
+      {
+        @foreach (var error in ViewBag.Errors)
+        {
+          <li>@error</li>
         }
+      }
 
 
-      <form method="post" action="/persons/create">
+      <form method="post" asp-controller="PersonsController" asp-action="Create">
         <div class="row g-3">
           <!-- Name -->
           <div class="col-md-6">
@@ -70,29 +72,31 @@
             </select>
           </div>
 
-            <!-- Date of Birth -->
+          <!-- Date of Birth -->
           <div class="col-md-6">
             <label for="Country" class="form-label">Country</label>
             <select id="Country" name="Country" class="form-select">
               <option value="">Select Country...</option>
-              @foreach(var country in ViewBag.Countires){
+              @foreach (var country in ViewBag.Countires)
+              {
                 <option value="@country.CountryId">@country.CountryName</option>
               }
+
               
-           
             </select>
           </div>
 
           <!-- Address -->
           <div class="col-md-6">
             <label for="Address" class="form-label">Address</label>
-             <input type="text" id="Address" name="Address" class="form-control" placeholder="Enter address">
+            <input type="text" id="Address" name="Address" class="form-control" placeholder="Enter address">
           </div>
 
           <!-- Newsletter -->
           <div class="col-12">
             <div class="form-check form-switch">
-              <input type="checkbox" id="ReceiveNewsLetter" name="ReceiveNewsLetter" class="form-check-input" value="true">
+              <input type="checkbox" id="ReceiveNewsLetter" name="ReceiveNewsLetter" class="form-check-input"
+                     value="true">
               <label class="form-check-label" for="ReceiveNewsLetter">
                 Subscribe to newsletter
               </label>
