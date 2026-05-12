@@ -6,6 +6,7 @@ using ServiceContracts.Enums;
 
 namespace ContactsApp.Controllers;
 
+[Route("persons")]
 public class PersonsController : Controller
 {
     private readonly IPersonService _personService;
@@ -19,7 +20,8 @@ public class PersonsController : Controller
 
     // GET
     [HttpGet]
-    [Route("persons/index")]
+    // [Route("persons/index")]
+    [Route("[action]")]
     [Route("/")]
     public IActionResult Index(
         string searchBy,
@@ -51,7 +53,8 @@ public class PersonsController : Controller
         return View(persons);
     }
 
-    [Route("persons/create")]
+    // [Route("persons/create")]
+    [Route("[action]")]
     [HttpGet]
     public IActionResult Create()
     {
@@ -60,7 +63,8 @@ public class PersonsController : Controller
         return View();
     }
 
-    [Route("persons/create")]
+    // [Route("persons/create")]
+    [Route("[action]")]
     [HttpPost]
     public IActionResult Create(PersonAddRequest request)
     {
