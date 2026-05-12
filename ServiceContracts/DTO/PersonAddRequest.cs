@@ -8,18 +8,27 @@ namespace ServiceContracts.DTO;
 /// </summary>
 public class PersonAddRequest
 {
-    [Required(ErrorMessage ="Name cannot be blank")]
+    [Required(ErrorMessage = "Name cannot be blank")]
     public string? Name { get; set; }
-    
-    [Required(ErrorMessage ="Email value should be a valid email")]
-    [EmailAddress(ErrorMessage ="Email value should be a valid email")]
-    public string?Email { get; set; }
+
+    [Required(ErrorMessage = "Email value should be a valid email")]
+    [EmailAddress(ErrorMessage = "Email value should be a valid email")]
+    [DataType(DataType.EmailAddress)]
+    public string? Email { get; set; }
 
     [Required]
+    [DataType(DataType.DateTime)]
     public DateTime? DateOfBirth { get; set; }
+
+
+    [Required]
     public GenderOptions? Gender { get; set; }
+
+
+    [Required]
     public Guid? CountryId { get; set; }
     public string? Address { get; set; }
+
     public bool ReceiveNewsLetter { get; set; }
 
 

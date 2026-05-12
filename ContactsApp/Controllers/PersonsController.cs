@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using ServiceContracts;
 using ServiceContracts.DTO;
 using ServiceContracts.Enums;
@@ -30,13 +31,15 @@ public class PersonsController : Controller
         SortOrderEnum sortOrder = SortOrderEnum.Descending
     )
     {
-        var searchFields = new Dictionary<string, string>();
-        searchFields.Add(nameof(PersonResponse.Name), "Name");
-        searchFields.Add(nameof(PersonResponse.Email), "Email Address");
-        searchFields.Add(nameof(PersonResponse.DateOfBirth), "Date Of Birth");
-        searchFields.Add(nameof(PersonResponse.Gender), "Gender");
-        searchFields.Add(nameof(PersonResponse.CountryId), "Country Id");
-        searchFields.Add(nameof(PersonResponse.Address), "Address");
+        var searchFields = new Dictionary<string, string>
+        {
+            { nameof(PersonResponse.Name), "Name" },
+            { nameof(PersonResponse.Email), "Email Address" },
+            { nameof(PersonResponse.DateOfBirth), "Date Of Birth" },
+            { nameof(PersonResponse.Gender), "Gender" },
+            { nameof(PersonResponse.CountryId), "Country Id" },
+            { nameof(PersonResponse.Address), "Address" }
+        };
         ViewBag.SearchFields = searchFields;
         ViewBag.searchBy = searchBy;
         ViewBag.searchString = searchString;
@@ -59,7 +62,18 @@ public class PersonsController : Controller
     public IActionResult Create()
     {
         var countries = _countriesService.GetCountries();
-        ViewBag.Countires = countries;
+        ViewBag.Countries = countries.Select(temp =>
+        {
+            return new SelectListItem()
+            {
+                Text = temp.CountryName,
+                Value = temp.CountryId.ToString()
+            };
+
+        }).ToList();
+
+
+
         return View();
     }
 
@@ -72,12 +86,21 @@ public class PersonsController : Controller
         {
             ViewBag.Errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
             var countries = _countriesService.GetCountries();
-            ViewBag.Countires = countries;
+
+            ViewBag.Countries = countries.Select(temp =>
+            {
+                return new SelectListItem()
+                {
+                    Text = temp.CountryName,
+                    Value = temp.CountryId.ToString()
+                };
+
+            }).ToList();
             return View();
 
         }
 
         PersonResponse personResponse = _personService.AddPerson(request);
-        return RedirectToAction("Index","Persons");
+        return RedirectToAction("Index", "Persons");
     }
 }

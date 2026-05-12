@@ -4,14 +4,6 @@
   ViewBag.Title = "Add New Person";
 }
 
-@section Scripts {
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.min.js"></script>
-  <script
-  src="https://cdn.jsdelivr.net/npm/jquery-validation-unobtrusive@3.2.12/dist/jquery.validate.unobtrusive.min.js"></script>
-
-}
-
 <div class="container py-4">
   <!-- Header -->
   <div class="mb-4">
@@ -39,9 +31,14 @@
               Full Name
               <span class="text-danger" title="Required">*</span>
             </label>
-            <input asp-for="Name" class="form-control" placeholder="Enter full name" />
-            <span asp-validation-for="Name"></span>
 
+            <input asp-for="Name" class="form-control" placeholder="Enter full name" />
+            <div class="invalid-feedback" style="display: block;">
+              @if (ViewBag.NameError != null)
+              {
+                @ViewBag.NameError
+              }
+            </div>
           </div>
 
           <!-- Email -->
@@ -51,14 +48,18 @@
               <span class="text-danger" title="Required">*</span>
             </label>
             <input asp-for="Email" class="form-control" placeholder="Enter Email address" />
-            <span asp-validation-for="Email"></span>
+            <div class="invalid-feedback" style="display: block;">
+              @if (ViewBag.EmailError != null)
+              {
+                @ViewBag.EmailError
+              }
+            </div>
           </div>
 
           <!-- Date of Birth -->
           <div class="col-md-6">
             <label for="DateOfBirth" class="form-label">Date of Birth</label>
             <input asp-for="DateOfBirth" class="form-control" />
-            <span asp-validation-for="DateOfBirth"></span>
           </div>
 
           <!-- Gender -->
@@ -74,16 +75,18 @@
               <label for="@gender">@gender</label>
 
             }
-            <span asp-validation-for="Gender"></span>
           </div>
 
           <!-- Date of Birth -->
           <div class="col-md-6">
             <label for="Country" class="form-label">Country</label>
-            <select id="Country" asp-for="CountryId" class="form-select" asp-items="@ViewBag.Countries">
-              <option value="">Please Select</option>
+            <select id="Country" asp-for="CountryId" class="form-select">
+              <option value="">Select Country...</option>
+              @foreach (var country in ViewBag.Countires)
+              {
+                <option value="@country.CountryId">@country.CountryName</option>
+              }
             </select>
-            <span asp-validation-for="CountryId"></span>
           </div>
 
           <!-- Address -->
@@ -95,7 +98,8 @@
           <!-- Newsletter -->
           <div class="col-12">
             <div class="form-check form-switch">
-              <input type="checkbox" asp-for="ReceiveNewsLetter" class="form-check-input" value="true">
+              <input type="checkbox" id="ReceiveNewsLetter" name="ReceiveNewsLetter" class="form-check-input"
+                     value="true">
               <label class="form-check-label" for="ReceiveNewsLetter">
                 Subscribe to newsletter
               </label>
@@ -108,7 +112,7 @@
               <button type="submit" class="btn btn-success">
                 <i class="fas fa-save me-1"></i> Create Person
               </button>
-              <a asp-action="Index" asp-controller="Persons" class="btn btn-secondary">
+              <a href="/persons/index" class="btn btn-secondary">
                 <i class="fas fa-times me-1"></i> Cancel
               </a>
             </div>
