@@ -14,6 +14,8 @@ public class PersonAddRequest
     [Required(ErrorMessage ="Email value should be a valid email")]
     [EmailAddress(ErrorMessage ="Email value should be a valid email")]
     public string?Email { get; set; }
+
+    [Required]
     public DateTime? DateOfBirth { get; set; }
     public GenderOptions? Gender { get; set; }
     public Guid? CountryId { get; set; }

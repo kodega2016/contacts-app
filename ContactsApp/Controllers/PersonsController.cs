@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using ServiceContracts;
 using ServiceContracts.DTO;
@@ -10,10 +11,10 @@ public class PersonsController : Controller
     private readonly IPersonService _personService;
     private readonly ICountriesService _countriesService;
 
-    public PersonsController(IPersonService personService,ICountriesService countriesService)
+    public PersonsController(IPersonService personService, ICountriesService countriesService)
     {
         _personService = personService;
-        _countriesService=countriesService;
+        _countriesService = countriesService;
     }
 
     // GET
@@ -50,12 +51,29 @@ public class PersonsController : Controller
         return View(persons);
     }
 
-    [Route("/persons/create")]
+    [Route("persons/create")]
     [HttpGet]
     public IActionResult Create()
     {
-        var countries=_countriesService.GetCountries();
-        ViewBag.Countires=countries;
+        var countries = _countriesService.GetCountries();
+        ViewBag.Countires = countries;
         return View();
+    }
+
+    [Route("persons/create")]
+    [HttpPost]
+    public IActionResult Create(PersonAddRequest request)
+    {
+        if (!ModelState.IsValid)
+        {
+            ViewBag.Errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
+            var countries = _countriesService.GetCountries();
+            ViewBag.Countires = countries;
+            return View();
+
+        }
+
+        PersonResponse personResponse = _personService.AddPerson(request);
+        return RedirectToAction("Index","Persons");
     }
 }

@@ -4,9 +4,9 @@ using Services;
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 
-// Add services to IOC container
-builder.Services.AddScoped<ICountriesService,CountriesService>();
-builder.Services.AddScoped<IPersonService,PersonService>();
+// Add services to IOC container (use singletons so in-memory data persists across requests)
+builder.Services.AddSingleton<ICountriesService,CountriesService>();
+builder.Services.AddSingleton<IPersonService,PersonService>();
 
 
 var app = builder.Build();
