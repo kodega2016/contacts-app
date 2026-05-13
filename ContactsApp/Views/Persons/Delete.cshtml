@@ -1,0 +1,48 @@
+@model PersonResponse
+
+@{
+    ViewBag.Title="Delete Person";
+}
+
+<div class="container py-4">
+  <div class="mb-4">
+    <h2 class="mb-1">Delete Person</h2>
+    <p class="text-muted small mb-0">Fill in the details below to update the contact</p>
+  </div>
+  <div class="card">
+    <div class="card-body">
+      <form method="post" asp-controller="PersonsController" asp-action="Delete">
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label for="Name" class="form-label">
+              Full Name
+              <span class="text-danger" title="Required">*</span>
+            </label>
+            <input asp-for="Name" class="form-control" placeholder="Enter full name" />
+            <span asp-validation-for="Name"></span>
+
+          </div>
+          <div class="col-md-6">
+            <label for="Email" class="form-label">
+              Email Address
+              <span class="text-danger" title="Required">*</span>
+            </label>
+            <input asp-for="Email" class="form-control" placeholder="Enter Email address" />
+            <span asp-validation-for="Email"></span>
+          </div>
+
+          <div class="col-12">
+            <div class="d-flex gap-2 pt-2">
+              <button type="submit" class="btn btn-danger">
+                <i class="fas fa-trash me-1"></i> Delete Person
+              </button>
+              <a asp-action="Index" asp-controller="Persons" class="btn btn-secondary">
+                <i class="fas fa-times me-1"></i> Cancel
+              </a>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
