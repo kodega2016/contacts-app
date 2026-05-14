@@ -1,0 +1,8 @@
+services:
+  database:
+    image: mcr.microsoft.com/mssql/server:2025-latest
+    ports:
+      - 1433:1433
+    restart: unless-stopped
+    container_name: contacts-app
+    env_file: .env
