@@ -52,13 +52,13 @@ public class PersonService : IPersonService
         _db.SaveChanges();
 
         // Convert the person object into PersonResponse type
-        return ConvertPersonToPersonResponse(person);
+        return person.ToPersonResponse();
     }
 
     public List<PersonResponse> GetAllPersons()
     {
         var _persons=_db.Persons.Include("Country").ToList();
-        return [.. _persons.Select(person => ConvertPersonToPersonResponse(person))];
+        return [.. _persons.Select(person => person.ToPersonResponse())];
     }
 
     public List<PersonResponse> GetFilteredPersons(string searchBy, string? searchString)
@@ -217,13 +217,6 @@ public class PersonService : IPersonService
         if (personId == null) return null;
         Person? person = _db.Persons.FirstOrDefault(person => person.PersonId == personId);
         if (person == null) return null;
-        return ConvertPersonToPersonResponse(person);
-    }
-
-    private static PersonResponse ConvertPersonToPersonResponse(Person person)
-    {
-        PersonResponse personResponse = person.ToPersonResponse();
-        personResponse.Country =person.Country?.CountryName;
-        return personResponse;
+        return person.ToPersonResponse();
     }
 }

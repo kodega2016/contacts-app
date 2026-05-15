@@ -83,6 +83,7 @@ public static class PersonResponseExtensions
             Address = person.Address,
             ReceiveNewsLetter = person.ReceiveNewsLetter,
             CountryId = person.CountryId,
+            Country=person.Country?.CountryName,
             Age = person.DateOfBirth != null
                 ? (int?)Math.Round((DateTime.Now - person.DateOfBirth.Value).TotalDays / 365.25)
                 : null,
