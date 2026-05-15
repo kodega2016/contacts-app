@@ -7,10 +7,10 @@ namespace Entities
     {
         public DbSet<Person> Persons { get; set; }
         public DbSet<Country> Countries { get; set; }
-        
+
 
         public PersonsDbContext(DbContextOptions<PersonsDbContext> options) : base(options) { }
-        
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -34,10 +34,15 @@ namespace Entities
             modelBuilder.Entity<Person>().HasData(persons ?? []);
 
             // fluent api for database field properties
-            modelBuilder.Entity<Person>().Property(temp=>temp.TFN)
+            modelBuilder.Entity<Person>().Property(temp => temp.TFN)
             .HasMaxLength(200).
             HasDefaultValue("ABC");
             // IsRequired(true);
+            //
+
+
+            // setting up the unique constraint using fluent api
+            modelBuilder.Entity<Person>().HasIndex("email").IsUnique();
 
         }
     }
