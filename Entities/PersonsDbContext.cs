@@ -32,6 +32,13 @@ namespace Entities
             // seeding the data to the database
             modelBuilder.Entity<Country>().HasData(countries ?? []);
             modelBuilder.Entity<Person>().HasData(persons ?? []);
+
+            // fluent api for database field properties
+            modelBuilder.Entity<Person>().Property(temp=>temp.TFN)
+            .HasMaxLength(200).
+            HasDefaultValue("ABC");
+            // IsRequired(true);
+
         }
     }
 }

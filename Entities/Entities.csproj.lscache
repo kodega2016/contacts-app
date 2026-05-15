@@ -60,6 +60,10 @@ Migrations/
  20260515041744_Initial.Designer.cs
  20260515050127_fix_table_name.cs
  20260515050127_fix_table_name.Designer.cs
+ 20260515082937_stored_proc.cs
+ 20260515082937_stored_proc.Designer.cs
+ 20260515091005_add_tfn_field.cs
+ 20260515091005_add_tfn_field.Designer.cs
  PersonsDbContextModelSnapshot.cs
 obj/Debug/net10.0/
  .NETCoreApp,Version=v10.0.AssemblyAttributes.cs

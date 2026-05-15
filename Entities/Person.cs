@@ -29,4 +29,6 @@ public class Person
     public string? Address { get; set; }
 
     public bool ReceiveNewsLetter { get; set; }
+
+    public string? TFN{get;set;}
 }
