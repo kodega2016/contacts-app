@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Entities;
 
@@ -31,4 +32,7 @@ public class Person
     public bool ReceiveNewsLetter { get; set; }
 
     public string? TFN{get;set;}
+
+    [ForeignKey("CountryId")]
+    public Country?Country {get;set;}
 }

@@ -10,13 +10,11 @@ namespace Services;
 
 public class PersonService : IPersonService
 {
-    private readonly ICountriesService _countriesService;
     private readonly PersonsDbContext _db;
 
-    public PersonService(ICountriesService countriesService, PersonsDbContext personsDbContext)
+    public PersonService(PersonsDbContext personsDbContext)
     {
         _db = personsDbContext;
-        _countriesService = countriesService;
     }
 
 
@@ -54,12 +52,13 @@ public class PersonService : IPersonService
         _db.SaveChanges();
 
         // Convert the person object into PersonResponse type
-        return ConvertPersonToPersonResponse(_countriesService, person);
+        return ConvertPersonToPersonResponse(person);
     }
 
     public List<PersonResponse> GetAllPersons()
     {
-        return [.. _db.Persons.ToList().Select(person => ConvertPersonToPersonResponse(_countriesService, person))];
+        var _persons=_db.Persons.Include("Country").ToList();
+        return [.. _persons.Select(person => ConvertPersonToPersonResponse(person))];
     }
 
     public List<PersonResponse> GetFilteredPersons(string searchBy, string? searchString)
@@ -218,13 +217,13 @@ public class PersonService : IPersonService
         if (personId == null) return null;
         Person? person = _db.Persons.FirstOrDefault(person => person.PersonId == personId);
         if (person == null) return null;
-        return ConvertPersonToPersonResponse(_countriesService, person);
+        return ConvertPersonToPersonResponse(person);
     }
 
-    private static PersonResponse ConvertPersonToPersonResponse(ICountriesService countriesService, Person person)
+    private static PersonResponse ConvertPersonToPersonResponse(Person person)
     {
         PersonResponse personResponse = person.ToPersonResponse();
-        personResponse.Country = countriesService.GetCountryByCountryId(person.CountryId)?.CountryName;
+        personResponse.Country =person.Country?.CountryName;
         return personResponse;
     }
 }

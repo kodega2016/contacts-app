@@ -42,8 +42,17 @@ namespace Entities
 
 
             // setting up the unique constraint using fluent api
-            modelBuilder.Entity<Person>().HasIndex("email").IsUnique();
+            modelBuilder.Entity<Person>().HasIndex("Email").IsUnique();
+
+            // relationship
+            modelBuilder.Entity<Person>(entity =>
+            {
+                entity.HasOne<Country>(c=>c.Country)
+                .WithMany(p=>p.Persons);
+            });
 
         }
     }
 }
+
+

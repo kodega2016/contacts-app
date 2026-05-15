@@ -1,5 +1,6 @@
 ﻿using System.Security.Cryptography.X509Certificates;
 using Entities;
+using Microsoft.EntityFrameworkCore;
 using ServiceContracts;
 using ServiceContracts.DTO;
 
@@ -42,7 +43,8 @@ public class CountriesService : ICountriesService
 
     public List<CountryResponse> GetCountries()
     {
-        return _db.Countries.Select(country => country.ToCountryResponse()).ToList();
+        var _countries=_db.Countries.Include("Persons").ToList();
+        return _countries.Select(country => country.ToCountryResponse()).ToList();
     }
 
     public CountryResponse? GetCountryByCountryId(Guid? countryId)

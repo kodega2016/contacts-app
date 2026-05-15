@@ -100,6 +100,7 @@
             <th>Date of Birth</th>
             <th>Age</th>
             <th>Gender</th>
+            <th>Country</th>
             <th>Address</th>
             <th>Newsletter</th>
             <th style="width: 110px;" class="text-center">Actions</th>
@@ -114,6 +115,7 @@
               <td>@person.DateOfBirth?.ToString("dd MMM yyyy")</td>
               <td>@person.Age</td>
               <td>@person.Gender</td>
+              <td>@person.Country</td>
               <td>@person.Address</td>
               <td>
                 @if (@person.ReceiveNewsLetter)
