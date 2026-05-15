@@ -1,0 +1,52 @@
+[
+  {
+    "PersonId": "A1B2C3D4-1234-4ABC-8DEF-123456789001",
+    "Name": "John Doe",
+    "Email": "john.doe@example.com",
+    "DateOfBirth": "1990-05-15",
+    "Gender": "Male",
+    "CountryId": "D9C7B5A1-1234-4ABC-8DEF-123456789001",
+    "Address": "123 Main St, New York, NY",
+    "ReceiveNewsLetter": true
+  },
+  {
+    "PersonId": "A1B2C3D4-1234-4ABC-8DEF-123456789002",
+    "Name": "Jane Smith",
+    "Email": "jane.smith@example.com",
+    "DateOfBirth": "1992-08-22",
+    "Gender": "Female",
+    "CountryId": "D9C7B5A1-1234-4ABC-8DEF-123456789005",
+    "Address": "456 Oak Ave, Toronto, ON",
+    "ReceiveNewsLetter": false
+  },
+  {
+    "PersonId": "A1B2C3D4-1234-4ABC-8DEF-123456789003",
+    "Name": "Raj Patel",
+    "Email": "raj.patel@example.com",
+    "DateOfBirth": "1988-03-10",
+    "Gender": "Male",
+    "CountryId": "D9C7B5A1-1234-4ABC-8DEF-123456789003",
+    "Address": "789 MG Road, Mumbai",
+    "ReceiveNewsLetter": true
+  },
+  {
+    "PersonId": "A1B2C3D4-1234-4ABC-8DEF-123456789004",
+    "Name": "Emily Watson",
+    "Email": "emily.watson@example.com",
+    "DateOfBirth": "1995-11-03",
+    "Gender": "Female",
+    "CountryId": "D9C7B5A1-1234-4ABC-8DEF-123456789004",
+    "Address": "10 Downing St, London",
+    "ReceiveNewsLetter": true
+  },
+  {
+    "PersonId": "A1B2C3D4-1234-4ABC-8DEF-123456789005",
+    "Name": "Sita Sharma",
+    "Email": "sita.sharma@example.com",
+    "DateOfBirth": "1993-07-28",
+    "Gender": "Female",
+    "CountryId": "D9C7B5A1-1234-4ABC-8DEF-123456789002",
+    "Address": "Basantapur, Kathmandu",
+    "ReceiveNewsLetter": false
+  }
+]

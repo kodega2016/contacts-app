@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using Entities;
+using Microsoft.EntityFrameworkCore;
 using ServiceContracts;
 using ServiceContracts.DTO;
 using ServiceContracts.Enums;
@@ -9,83 +10,14 @@ namespace Services;
 
 public class PersonService : IPersonService
 {
-    private readonly List<Person> _persons;
     private readonly ICountriesService _countriesService;
+    private readonly PersonsDbContext _db;
 
-    public PersonService(ICountriesService countriesService, bool initialize = true)
+    public PersonService(ICountriesService countriesService, PersonsDbContext personsDbContext)
     {
-        _persons = new List<Person>() { };
+        _db = personsDbContext;
         _countriesService = countriesService;
-
-        if (initialize)
-        {
-            _persons.AddRange(new List<Person>()
-            {
-                new Person()
-                {
-                    PersonId = Guid.Parse("F3444926-80FB-416A-8BCC-F27CE006060C"),
-                    Name = "John Doe",
-                    Email = "john.doe@example.com",
-                    DateOfBirth = new DateTime(1995, 5, 12),
-                    Gender = "Male",
-                    CountryId = Guid.Parse("11111111-1111-1111-1111-111111111111"),
-                    Address = "123 Main Street, New York",
-                    ReceiveNewsLetter = true
-                },
-
-                new Person()
-                {
-                    PersonId = Guid.Parse("0E9F57DC-63F1-4F59-8A04-577793E5FDDA"),
-                    Name = "Emma Watson",
-                    Email = "emma.watson@example.com",
-                    DateOfBirth = new DateTime(1998, 8, 25),
-                    Gender = "Female",
-                    CountryId = Guid.Parse("22222222-2222-2222-2222-222222222222"),
-                    Address = "45 Queen Street, London",
-                    ReceiveNewsLetter = false
-                },
-
-                new Person()
-                {
-                    PersonId = Guid.Parse("8084A652-F83A-47CA-9885-1263D8676334"),
-                    Name = "Michael Smith",
-                    Email = "michael.smith@example.com",
-                    DateOfBirth = new DateTime(1989, 11, 3),
-                    Gender = "Male",
-                    CountryId = Guid.Parse("33333333-3333-3333-3333-333333333333"),
-                    Address = "78 George Street, Sydney",
-                    ReceiveNewsLetter = true
-                },
-
-                new Person()
-                {
-                    PersonId = Guid.Parse("33A7C9B8-7266-4691-BF36-21D6FFD06DBB"),
-                    Name = "Sophia Johnson",
-                    Email = "sophia.johnson@example.com",
-                    DateOfBirth = new DateTime(2001, 2, 14),
-                    Gender = "Female",
-                    CountryId = Guid.Parse("44444444-4444-4444-4444-444444444444"),
-                    Address = "12 Sunset Blvd, Los Angeles",
-                    ReceiveNewsLetter = false
-                },
-
-                new Person()
-                {
-                    PersonId = Guid.NewGuid(),
-                    Name = "David Brown",
-                    Email = "david.brown@example.com",
-                    DateOfBirth = new DateTime(1993, 7, 9),
-                    Gender = "Male",
-                    CountryId = Guid.Parse("55555555-5555-5555-5555-555555555555"),
-                    Address = "99 King Street, Toronto",
-                    ReceiveNewsLetter = true
-                }
-            });
-        }
-
     }
-
-
 
 
     public PersonResponse AddPerson(PersonAddRequest? request)
@@ -113,18 +45,21 @@ public class PersonService : IPersonService
 
         // Convert personAddRequest into Person type
         Person person = request.ToPerson();
-        _persons.Add(person);
+       
 
         // Generate PersonId
         person.PersonId = Guid.NewGuid();
 
+        _db.Persons.Add(person);
+        _db.SaveChanges();
+
         // Convert the person object into PersonResponse type
-        return ConvertPersonToPersonResponse(person);
+        return ConvertPersonToPersonResponse(_countriesService, person);
     }
 
     public List<PersonResponse> GetAllPersons()
     {
-        return _persons.Select(person => ConvertPersonToPersonResponse(person)).ToList();
+        return [.. _db.Persons.ToList().Select(person => ConvertPersonToPersonResponse(_countriesService, person))];
     }
 
     public List<PersonResponse> GetFilteredPersons(string searchBy, string? searchString)
@@ -135,56 +70,35 @@ public class PersonService : IPersonService
 
         if (string.IsNullOrEmpty(searchBy) || string.IsNullOrEmpty((searchString))) return matchingPersons;
 
-        switch (searchBy)
+        matchingPersons = searchBy switch
         {
-            case nameof(PersonResponse.Name):
-                matchingPersons = allPersons.Where(temp =>
+            nameof(PersonResponse.Name) => [.. allPersons.Where(temp =>
                     temp.Name?.Contains(searchString,
                         StringComparison.OrdinalIgnoreCase) == true
-                ).ToList();
-                break;
-
-            case nameof(PersonResponse.Email):
-                matchingPersons = allPersons.Where(temp =>
+                )],
+            nameof(PersonResponse.Email) => [.. allPersons.Where(temp =>
                     temp.Email?.Contains(searchString,
                         StringComparison.OrdinalIgnoreCase) == true
-                ).ToList();
-                break;
-
-            case nameof(Person.DateOfBirth):
-                matchingPersons = allPersons.Where(temp =>
+                )],
+            nameof(Person.DateOfBirth) => [.. allPersons.Where(temp =>
                     temp.DateOfBirth?.ToString("dd MMMM yyyy")
                         .Contains(searchString,
                             StringComparison.OrdinalIgnoreCase) == true
-                ).ToList();
-                break;
-
-            case nameof(Person.Gender):
-                matchingPersons = allPersons.Where(temp =>
+                )],
+            nameof(Person.Gender) => [.. allPersons.Where(temp =>
                     temp.Gender?.Contains(searchString,
                         StringComparison.OrdinalIgnoreCase) == true
-                ).ToList();
-                break;
-
-            case nameof(Person.CountryId):
-                matchingPersons = allPersons.Where(temp =>
+                )],
+            nameof(Person.CountryId) => [.. allPersons.Where(temp =>
                     temp.Country?.Contains(searchString,
                         StringComparison.OrdinalIgnoreCase) == true
-                ).ToList();
-                break;
-
-            case nameof(Person.Address):
-                matchingPersons = allPersons.Where(temp =>
+                )],
+            nameof(Person.Address) => [.. allPersons.Where(temp =>
                     temp.Address?.Contains(searchString,
                         StringComparison.OrdinalIgnoreCase) == true
-                ).ToList();
-                break;
-
-            default:
-                matchingPersons = allPersons;
-                break;
-        }
-
+                )],
+            _ => allPersons,
+        };
         return matchingPersons;
     }
 
@@ -198,56 +112,56 @@ public class PersonService : IPersonService
         List<PersonResponse> sortedPersons = (sortBy, sortOrder) switch
         {
             (nameof(PersonResponse.Name), SortOrderEnum.Ascending) =>
-                allPersons.OrderBy(temp => temp.Name, StringComparer.OrdinalIgnoreCase).ToList(),
+                [.. allPersons.OrderBy(temp => temp.Name, StringComparer.OrdinalIgnoreCase)],
 
             (nameof(PersonResponse.Name), SortOrderEnum.Descending) =>
-                allPersons.OrderByDescending(temp => temp.Name, StringComparer.OrdinalIgnoreCase).ToList(),
+                [.. allPersons.OrderByDescending(temp => temp.Name, StringComparer.OrdinalIgnoreCase)],
 
             (nameof(PersonResponse.Email), SortOrderEnum.Ascending) =>
-    allPersons.OrderBy(temp => temp.Email, StringComparer.OrdinalIgnoreCase).ToList(),
+    [.. allPersons.OrderBy(temp => temp.Email, StringComparer.OrdinalIgnoreCase)],
 
             (nameof(PersonResponse.Email), SortOrderEnum.Descending) =>
-                allPersons.OrderByDescending(temp => temp.Email, StringComparer.OrdinalIgnoreCase).ToList(),
+                [.. allPersons.OrderByDescending(temp => temp.Email, StringComparer.OrdinalIgnoreCase)],
 
 
             (nameof(PersonResponse.DateOfBirth), SortOrderEnum.Ascending) =>
-                allPersons.OrderBy(temp => temp.DateOfBirth).ToList(),
+                [.. allPersons.OrderBy(temp => temp.DateOfBirth)],
 
             (nameof(PersonResponse.DateOfBirth), SortOrderEnum.Descending) =>
-                allPersons.OrderByDescending(temp => temp.DateOfBirth).ToList(),
+                [.. allPersons.OrderByDescending(temp => temp.DateOfBirth)],
 
 
 
             (nameof(PersonResponse.Age), SortOrderEnum.Ascending) =>
-                allPersons.OrderBy(temp => temp.Age).ToList(),
+                [.. allPersons.OrderBy(temp => temp.Age)],
 
             (nameof(PersonResponse.Age), SortOrderEnum.Descending) =>
-                allPersons.OrderByDescending(temp => temp.Age).ToList(),
+                [.. allPersons.OrderByDescending(temp => temp.Age)],
 
 
             (nameof(PersonResponse.Gender), SortOrderEnum.Ascending) =>
-                allPersons.OrderBy(temp => temp.Gender).ToList(),
+                [.. allPersons.OrderBy(temp => temp.Gender)],
 
             (nameof(PersonResponse.Gender), SortOrderEnum.Descending) =>
-                allPersons.OrderByDescending(temp => temp.Gender).ToList(),
+                [.. allPersons.OrderByDescending(temp => temp.Gender)],
 
             (nameof(PersonResponse.Country), SortOrderEnum.Ascending) =>
-                allPersons.OrderBy(temp => temp.Country).ToList(),
+                [.. allPersons.OrderBy(temp => temp.Country)],
 
             (nameof(PersonResponse.Country), SortOrderEnum.Descending) =>
-                allPersons.OrderByDescending(temp => temp.Country).ToList(),
+                [.. allPersons.OrderByDescending(temp => temp.Country)],
 
 
             (nameof(PersonResponse.Address), SortOrderEnum.Descending) =>
-                allPersons.OrderByDescending(temp => temp.Address).ToList(),
+                [.. allPersons.OrderByDescending(temp => temp.Address)],
 
 
             (nameof(PersonResponse.ReceiveNewsLetter), SortOrderEnum.Ascending) =>
-                allPersons.OrderByDescending(temp => temp.ReceiveNewsLetter).ToList(),
+                [.. allPersons.OrderByDescending(temp => temp.ReceiveNewsLetter)],
 
 
             (nameof(PersonResponse.ReceiveNewsLetter), SortOrderEnum.Descending) =>
-                allPersons.OrderByDescending(temp => temp.ReceiveNewsLetter).ToList(),
+                [.. allPersons.OrderByDescending(temp => temp.ReceiveNewsLetter)],
 
             _ => allPersons
 
@@ -269,42 +183,48 @@ public class PersonService : IPersonService
         ValidationHelpers.ModelValidation(request);
 
         // get matching person to update
-        var matchingPerson = _persons.FirstOrDefault(person => person.PersonId == request.PersonId);
-        if (matchingPerson == null) throw new ArgumentException("Given person id does not exist");
+        var matchingPerson = _db.Persons.FirstOrDefault(person => person.PersonId == request.PersonId);
+        if (matchingPerson != null)
+        {
+            // update all the details
+            matchingPerson.Name = request.Name;
+            matchingPerson.Email = request.Email;
+            matchingPerson.DateOfBirth = request.DateOfBirth;
+            matchingPerson.Gender = request.Gender.ToString();
+            matchingPerson.CountryId = request.CountryId;
+            matchingPerson.Address = request.Address;
+            matchingPerson.ReceiveNewsLetter = request.ReceiveNewsLetter;
+            
+            _db.Persons.Update(matchingPerson);
+            _db.SaveChanges();
+            return matchingPerson.ToPersonResponse();
+        }
 
-        // update all the details
-        matchingPerson.Name = request.Name;
-        matchingPerson.Email = request.Email;
-        matchingPerson.DateOfBirth = request.DateOfBirth;
-        matchingPerson.Gender = request.Gender.ToString();
-        matchingPerson.CountryId = request.CountryId;
-        matchingPerson.Address = request.Address;
-        matchingPerson.ReceiveNewsLetter = request.ReceiveNewsLetter;
-        return matchingPerson.ToPersonResponse();
+        throw new ArgumentException("Given person id does not exist");
     }
 
     public bool DeletePerson(Guid? personId)
     {
         if (personId == null) throw new ArgumentNullException(nameof(personId));
-        var person = _persons.FirstOrDefault(person => person.PersonId == personId);
+        var person = _db.Persons.FirstOrDefault(person => person.PersonId == personId);
         if (person == null) return false;
-
-        _persons.RemoveAll(p => p.PersonId == personId);
+        _db.Persons.Remove(person);
+        _db.SaveChanges();
         return true;
     }
 
     public PersonResponse? GetPersonByPersonId(Guid? personId)
     {
         if (personId == null) return null;
-        Person? person = _persons.FirstOrDefault(person => person.PersonId == personId);
+        Person? person = _db.Persons.FirstOrDefault(person => person.PersonId == personId);
         if (person == null) return null;
-        return ConvertPersonToPersonResponse(person);
+        return ConvertPersonToPersonResponse(_countriesService, person);
     }
 
-    private PersonResponse ConvertPersonToPersonResponse(Person person)
+    private static PersonResponse ConvertPersonToPersonResponse(ICountriesService countriesService, Person person)
     {
         PersonResponse personResponse = person.ToPersonResponse();
-        personResponse.Country = _countriesService.GetCountryByCountryId(person.CountryId)?.CountryName;
+        personResponse.Country = countriesService.GetCountryByCountryId(person.CountryId)?.CountryName;
         return personResponse;
     }
 }

@@ -1,0 +1,22 @@
+[
+  {
+    "CountryID": "D9C7B5A1-1234-4ABC-8DEF-123456789001",
+    "CountryName": "USA"
+  },
+  {
+    "CountryID": "D9C7B5A1-1234-4ABC-8DEF-123456789002",
+    "CountryName": "Nepal"
+  },
+  {
+    "CountryID": "D9C7B5A1-1234-4ABC-8DEF-123456789003",
+    "CountryName": "India"
+  },
+  {
+    "CountryID": "D9C7B5A1-1234-4ABC-8DEF-123456789004",
+    "CountryName": "UK"
+  },
+  {
+    "CountryID": "D9C7B5A1-1234-4ABC-8DEF-123456789005",
+    "CountryName": "Canada"
+  }
+]

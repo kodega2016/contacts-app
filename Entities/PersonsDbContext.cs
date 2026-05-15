@@ -1,37 +1,37 @@
+using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
 
 namespace Entities
 {
     public class PersonsDbContext : DbContext
     {
-        public DbSet<Country> Countries { get; set; }
         public DbSet<Person> Persons { get; set; }
+        public DbSet<Country> Countries { get; set; }
+        
 
-
-        public PersonsDbContext(DbContextOptions<PersonsDbContext> options) : base(options)
-        {
-        }
-
+        public PersonsDbContext(DbContextOptions<PersonsDbContext> options) : base(options) { }
+        
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // base.OnModelCreating(modelBuilder);
-            modelBuilder.Entity<Person>()
-                .HasIndex(c => c.Email)
-                .IsUnique();
+            base.OnModelCreating(modelBuilder);
 
+            // setting up the database table name
+            modelBuilder.Entity<Country>().ToTable("Countries");
+            modelBuilder.Entity<Person>().ToTable("Persons");
 
-            modelBuilder.Entity<Country>()
-                .Property(e => e.CountryName)
-                .IsRequired();
+            // seeding the database table with some data from JSON data
+            // lets get the data from the JSON files first
+            var dataDir = Path.Combine(AppContext.BaseDirectory, "Data");
+            var countriesJson = File.ReadAllText(Path.Combine(dataDir, "countries.json"));
+            var personsJson = File.ReadAllText(Path.Combine(dataDir, "persons.json"));
 
+            // serialize the JSON data into model class
+            var countries = JsonSerializer.Deserialize<List<Country>>(countriesJson);
+            var persons = JsonSerializer.Deserialize<List<Person>>(personsJson);
 
-            modelBuilder.Entity<Country>()
-                .Property(e => e.CountryName)
-                .HasMaxLength(80)
-                .HasColumnName("Country_Name");
+            // seeding the data to the database
+            modelBuilder.Entity<Country>().HasData(countries ?? []);
+            modelBuilder.Entity<Person>().HasData(persons ?? []);
         }
     }
 }
-
-
-
