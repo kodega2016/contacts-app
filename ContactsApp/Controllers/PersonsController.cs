@@ -59,9 +59,9 @@ public class PersonsController : Controller
     // [Route("persons/create")]
     [Route("[action]")]
     [HttpGet]
-    public IActionResult Create()
+    public async Task<IActionResult> Create()
     {
-        var countries = _countriesService.GetCountries();
+        var countries =await _countriesService.GetCountries();
         ViewBag.Countries = countries.Select(temp =>
         {
             return new SelectListItem()
@@ -80,12 +80,12 @@ public class PersonsController : Controller
     // [Route("persons/create")]
     [Route("[action]")]
     [HttpPost]
-    public IActionResult Create(PersonAddRequest request)
+    public async Task<IActionResult> Create(PersonAddRequest request)
     {
         if (!ModelState.IsValid)
         {
             ViewBag.Errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
-            var countries = _countriesService.GetCountries();
+            var countries = await _countriesService.GetCountries();
 
             ViewBag.Countries = countries.Select(temp =>
             {
@@ -107,14 +107,14 @@ public class PersonsController : Controller
 
     [Route("[action]/{id}")]
     [HttpGet]
-    public IActionResult Edit(Guid id)
+    public async Task<IActionResult> Edit(Guid id)
     {
-        PersonResponse? personResponse = _personService.GetPersonByPersonId(id);
+        PersonResponse? personResponse =  _personService.GetPersonByPersonId(id);
         if (personResponse == null)
         {
             return RedirectToAction("Index", "Persons");
         }
-        var countries = _countriesService.GetCountries();
+        var countries = await _countriesService.GetCountries();
         ViewBag.Countries = countries.Select(temp =>
         {
             return new SelectListItem()
@@ -130,7 +130,7 @@ public class PersonsController : Controller
 
     [HttpPost]
     [Route("[action]/{personId}")]
-    public IActionResult Edit(Guid personId, PersonUpdateRequest request)
+    public async Task<IActionResult> Edit(Guid personId, PersonUpdateRequest request)
     {
         PersonResponse? personResponse = _personService.GetPersonByPersonId(personId);
 
@@ -141,7 +141,7 @@ public class PersonsController : Controller
         }
         else
         {
-            var countries = _countriesService.GetCountries();
+            var countries =await _countriesService.GetCountries();
             ViewBag.Countries = countries.Select(temp =>
             {
                 return new SelectListItem()
