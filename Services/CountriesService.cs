@@ -14,7 +14,7 @@ public class CountriesService : ICountriesService
     {
         _db = personsDbContext;
     }
-    public CountryResponse AddCountry(CountryAddRequest? countryAddRequest)
+    public async Task<CountryResponse> AddCountry(CountryAddRequest? countryAddRequest)
     {
         // Validation: countryAddRequest parameter cannot be null
         if (countryAddRequest == null) throw new ArgumentNullException(nameof(countryAddRequest));
@@ -35,25 +35,23 @@ public class CountriesService : ICountriesService
         country.CountryID = Guid.NewGuid();
 
         // Add country to the list of countries
-        _db.Countries.Add(country);
-        _db.SaveChanges();
-
+        await _db.Countries.AddAsync(country);
+        await _db.SaveChangesAsync();
         return country.ToCountryResponse();
     }
 
-    public List<CountryResponse> GetCountries()
+    public async Task<List<CountryResponse>> GetCountries()
     {
         var _countries=_db.Countries.Include("Persons").ToList();
         return _countries.Select(country => country.ToCountryResponse()).ToList();
     }
 
-    public CountryResponse? GetCountryByCountryId(Guid? countryId)
+    public async Task<CountryResponse?> GetCountryByCountryId(Guid? countryId)
     {
         if (countryId == null) return null;
-        var country = _db.Countries.FirstOrDefault(temp => temp.CountryID == countryId);
+        var country = await _db.Countries.FirstOrDefaultAsync(temp => temp.CountryID == countryId);
         return country?.ToCountryResponse();
     }
-
 
 
 }
