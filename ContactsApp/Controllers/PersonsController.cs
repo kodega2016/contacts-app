@@ -24,7 +24,7 @@ public class PersonsController : Controller
     // [Route("persons/index")]
     [Route("[action]")]
     [Route("/")]
-    public IActionResult Index(
+    public async Task<IActionResult> Index(
         string searchBy,
         string? searchString,
         string sortBy = nameof(PersonResponse.Name),
@@ -45,10 +45,10 @@ public class PersonsController : Controller
         ViewBag.searchString = searchString;
 
         // Implement search filter
-        List<PersonResponse> persons = _personService.GetFilteredPersons(searchBy, searchString);
+        List<PersonResponse> persons = await _personService.GetFilteredPersons(searchBy, searchString);
 
         // Implement sorting feature
-        persons = _personService.GetSortedPersons(persons, sortBy, sortOrder);
+        persons = await _personService.GetSortedPersons(persons, sortBy, sortOrder);
 
         // Setting up sorting data to the ViewBag
         ViewBag.SortBy = sortBy;
@@ -100,7 +100,7 @@ public class PersonsController : Controller
 
         }
 
-        PersonResponse personResponse = _personService.AddPerson(request);
+        PersonResponse personResponse =await _personService.AddPerson(request);
         return RedirectToAction("Index", "Persons");
     }
 
@@ -109,7 +109,7 @@ public class PersonsController : Controller
     [HttpGet]
     public async Task<IActionResult> Edit(Guid id)
     {
-        PersonResponse? personResponse =  _personService.GetPersonByPersonId(id);
+        PersonResponse? personResponse =await  _personService.GetPersonByPersonId(id);
         if (personResponse == null)
         {
             return RedirectToAction("Index", "Persons");
@@ -132,11 +132,11 @@ public class PersonsController : Controller
     [Route("[action]/{personId}")]
     public async Task<IActionResult> Edit(Guid personId, PersonUpdateRequest request)
     {
-        PersonResponse? personResponse = _personService.GetPersonByPersonId(personId);
+        PersonResponse? personResponse =await _personService.GetPersonByPersonId(personId);
 
         if (ModelState.IsValid)
         {
-            PersonResponse? updatedPerson = _personService.UpdatePerson(request);
+            PersonResponse? updatedPerson = await _personService.UpdatePerson(request);
             return RedirectToAction("Index", "Persons");
         }
         else
@@ -160,9 +160,9 @@ public class PersonsController : Controller
 
     [HttpGet]
     [Route("[action]/{personId}")]
-    public IActionResult Delete(Guid personId)
+    public async Task<IActionResult> Delete(Guid personId)
     {
-        PersonResponse? personResponse = _personService.GetPersonByPersonId(personId);
+        PersonResponse? personResponse = await _personService.GetPersonByPersonId(personId);
         if (personResponse == null)
         {
             return RedirectToAction("Index", "Persons");
