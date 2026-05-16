@@ -48,7 +48,7 @@ public class PersonsController : Controller
         List<PersonResponse> persons = await _personService.GetFilteredPersons(searchBy, searchString);
 
         // Implement sorting feature
-        persons = await _personService.GetSortedPersons(persons, sortBy, sortOrder);
+        persons =  _personService.GetSortedPersons(persons, sortBy, sortOrder);
 
         // Setting up sorting data to the ViewBag
         ViewBag.SortBy = sortBy;

@@ -48,7 +48,7 @@ public interface IPersonService
     /// <param name="sortOrder">ASC or DESC</param>
     /// <returns>Returns sorted persons as PersonResponse list</returns>
 
-    Task<List<PersonResponse>> GetSortedPersons(List<PersonResponse> allPersons, string sortBy, SortOrderEnum sortOrder);
+    List<PersonResponse> GetSortedPersons(List<PersonResponse> allPersons, string sortBy, SortOrderEnum sortOrder);
 
     /// <summary>
     /// Updates the specified person details based on the given
