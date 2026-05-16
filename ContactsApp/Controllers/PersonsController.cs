@@ -1,9 +1,11 @@
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Rotativa.AspNetCore;
 using ServiceContracts;
 using ServiceContracts.DTO;
 using ServiceContracts.Enums;
+using System.Runtime.InteropServices;
 
 namespace ContactsApp.Controllers;
 
@@ -12,12 +14,14 @@ public class PersonsController : Controller
 {
     private readonly IPersonService _personService;
     private readonly ICountriesService _countriesService;
+    private static bool? _rotativaAvailable;
 
     public PersonsController(IPersonService personService, ICountriesService countriesService)
     {
         _personService = personService;
         _countriesService = countriesService;
     }
+
 
     // GET
     [HttpGet]
@@ -180,6 +184,25 @@ public class PersonsController : Controller
         _personService.DeletePerson(personId);
         return RedirectToAction("Index");
 
+    }
+
+    [HttpGet]
+    [Route("/persons-report")]
+    public async Task<IActionResult> Report()
+    {
+        var persons = await _personService.GetAllPersons();
+        return View("PersonsPdf", persons);
+    }
+
+    [HttpGet]
+    [Route("/persons-report.pdf")]
+    public async Task<IActionResult> DownloadPdf()
+    {
+        var persons = await _personService.GetAllPersons();
+        return new ViewAsPdf("PersonsPdf", persons)
+        {
+            FileName = "persons-report.pdf"
+        };
     }
 }
 
