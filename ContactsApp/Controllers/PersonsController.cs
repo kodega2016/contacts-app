@@ -1,3 +1,4 @@
+using CsvHelper;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -5,6 +6,7 @@ using Rotativa.AspNetCore;
 using ServiceContracts;
 using ServiceContracts.DTO;
 using ServiceContracts.Enums;
+using System.Globalization;
 using System.Runtime.InteropServices;
 
 namespace ContactsApp.Controllers;
@@ -52,7 +54,7 @@ public class PersonsController : Controller
         List<PersonResponse> persons = await _personService.GetFilteredPersons(searchBy, searchString);
 
         // Implement sorting feature
-        persons =  _personService.GetSortedPersons(persons, sortBy, sortOrder);
+        persons = _personService.GetSortedPersons(persons, sortBy, sortOrder);
 
         // Setting up sorting data to the ViewBag
         ViewBag.SortBy = sortBy;
@@ -65,7 +67,7 @@ public class PersonsController : Controller
     [HttpGet]
     public async Task<IActionResult> Create()
     {
-        var countries =await _countriesService.GetCountries();
+        var countries = await _countriesService.GetCountries();
         ViewBag.Countries = countries.Select(temp =>
         {
             return new SelectListItem()
@@ -104,7 +106,7 @@ public class PersonsController : Controller
 
         }
 
-        PersonResponse personResponse =await _personService.AddPerson(request);
+        PersonResponse personResponse = await _personService.AddPerson(request);
         return RedirectToAction("Index", "Persons");
     }
 
@@ -113,7 +115,7 @@ public class PersonsController : Controller
     [HttpGet]
     public async Task<IActionResult> Edit(Guid id)
     {
-        PersonResponse? personResponse =await  _personService.GetPersonByPersonId(id);
+        PersonResponse? personResponse = await _personService.GetPersonByPersonId(id);
         if (personResponse == null)
         {
             return RedirectToAction("Index", "Persons");
@@ -136,7 +138,7 @@ public class PersonsController : Controller
     [Route("[action]/{personId}")]
     public async Task<IActionResult> Edit(Guid personId, PersonUpdateRequest request)
     {
-        PersonResponse? personResponse =await _personService.GetPersonByPersonId(personId);
+        PersonResponse? personResponse = await _personService.GetPersonByPersonId(personId);
 
         if (ModelState.IsValid)
         {
@@ -145,7 +147,7 @@ public class PersonsController : Controller
         }
         else
         {
-            var countries =await _countriesService.GetCountries();
+            var countries = await _countriesService.GetCountries();
             ViewBag.Countries = countries.Select(temp =>
             {
                 return new SelectListItem()
@@ -204,5 +206,14 @@ public class PersonsController : Controller
             FileName = "persons-report.pdf"
         };
     }
+
+    [HttpGet]
+    [Route("/persons-csv")]
+    public async Task<IActionResult> DownloadCSV()
+    {
+        var memoryStream=await _personService.GetPersonsCSV();
+        return File(memoryStream,"application/octet-stream");
+    }
+
 }
 
