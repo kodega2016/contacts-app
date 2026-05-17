@@ -1,4 +1,5 @@
-using System.ComponentModel.DataAnnotations;
+using System.Globalization;
+using CsvHelper;
 using Entities;
 using Microsoft.EntityFrameworkCore;
 using ServiceContracts;
@@ -43,13 +44,13 @@ public class PersonService : IPersonService
 
         // Convert personAddRequest into Person type
         Person person = request.ToPerson();
-       
+
 
         // Generate PersonId
         person.PersonId = Guid.NewGuid();
 
-       await _db.Persons.AddAsync(person);
-       await _db.SaveChangesAsync();
+        await _db.Persons.AddAsync(person);
+        await _db.SaveChangesAsync();
 
         // Convert the person object into PersonResponse type
         return person.ToPersonResponse();
@@ -57,7 +58,7 @@ public class PersonService : IPersonService
 
     public async Task<List<PersonResponse>> GetAllPersons()
     {
-        var _persons=await _db.Persons.Include("Country").ToListAsync();
+        var _persons = await _db.Persons.Include("Country").ToListAsync();
         return [.. _persons.Select(person => person.ToPersonResponse())];
     }
 
@@ -193,9 +194,9 @@ public class PersonService : IPersonService
             matchingPerson.CountryId = request.CountryId;
             matchingPerson.Address = request.Address;
             matchingPerson.ReceiveNewsLetter = request.ReceiveNewsLetter;
-            
+
             _db.Persons.Update(matchingPerson);
-            await  _db.SaveChangesAsync();
+            await _db.SaveChangesAsync();
             return matchingPerson.ToPersonResponse();
         }
 
@@ -215,8 +216,26 @@ public class PersonService : IPersonService
     public async Task<PersonResponse?> GetPersonByPersonId(Guid? personId)
     {
         if (personId == null) return null;
-        Person? person = await  _db.Persons.FirstOrDefaultAsync(person => person.PersonId == personId);
+        Person? person = await _db.Persons.FirstOrDefaultAsync(person => person.PersonId == personId);
         if (person == null) return null;
         return person.ToPersonResponse();
+    }
+
+    public async Task<MemoryStream> GetPersonsCSV()
+    {
+        MemoryStream memoryStream = new();
+        StreamWriter streamWriter = new(memoryStream);
+        CsvWriter csvWriter=new(streamWriter,CultureInfo.InvariantCulture,leaveOpen:true);
+        var persons = await _db.Persons.Select(temp => temp.ToPersonResponse()).ToListAsync();
+
+        // Write CSV Headers
+        csvWriter.WriteHeader<PersonResponse>();
+        await csvWriter.NextRecordAsync();
+        // Write the body to the csv
+        await csvWriter.WriteRecordsAsync(persons);
+        await csvWriter.FlushAsync();
+        await streamWriter.FlushAsync();
+        memoryStream.Position=0;
+        return memoryStream;
     }
 }
