@@ -302,6 +302,14 @@ public class PersonService : IPersonService
             sheet.Cells["G1"].Value = "Address";
             sheet.Cells["H1"].Value = "Receive News Letter";
 
+
+            using (ExcelRange headerCells = sheet.Cells["A1:H1"])
+            {
+                headerCells.Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+                headerCells.Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightGray);
+                headerCells.Style.Font.Bold = true;
+            }
+
             int row = 2;
 
             var persons = await _db.Persons.Include("Country").Select(temp => temp.ToPersonResponse()).ToListAsync();

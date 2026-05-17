@@ -220,7 +220,7 @@ public class PersonsController : Controller
     public async Task<IActionResult> DownloadExcel()
     {
         var memoryStream = await _personService.GetPersonsExcel();
-        return File(memoryStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+        return File(memoryStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "persons.xlsx");
     }
 
 }
