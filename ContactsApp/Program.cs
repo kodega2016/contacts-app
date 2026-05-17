@@ -4,6 +4,7 @@ using Rotativa.AspNetCore;
 using System.Reflection;
 using ServiceContracts;
 using Services;
+using OfficeOpenXml;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
@@ -79,6 +80,7 @@ catch (Exception ex)
         Console.WriteLine($"Warning: Rotativa/wkhtmltopdf not available: {ex.Message}");
     }
 }
+
 
 
 app.Run();

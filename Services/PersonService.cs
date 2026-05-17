@@ -7,6 +7,7 @@ using ServiceContracts.DTO;
 using ServiceContracts.Enums;
 using Services.Helpers;
 using CsvHelper.Configuration;
+using OfficeOpenXml;
 
 namespace Services;
 
@@ -282,6 +283,47 @@ public class PersonService : IPersonService
             await csvWriter.FlushAsync();
         }
 
+        memoryStream.Position = 0;
+        return memoryStream;
+    }
+
+    public async Task<MemoryStream> GetPersonsExcel()
+    {
+        MemoryStream memoryStream = new();
+        using (var package = new ExcelPackage(memoryStream))
+        {
+            var sheet = package.Workbook.Worksheets.Add("PersonsSheet");
+            sheet.Cells["A1"].Value = "Name";
+            sheet.Cells["B1"].Value = "Email";
+            sheet.Cells["C1"].Value = "Date Of Birth";
+            sheet.Cells["D1"].Value = "Age";
+            sheet.Cells["E1"].Value = "Gender";
+            sheet.Cells["F1"].Value = "Country";
+            sheet.Cells["G1"].Value = "Address";
+            sheet.Cells["H1"].Value = "Receive News Letter";
+
+            int row = 2;
+
+            var persons = await _db.Persons.Include("Country").Select(temp => temp.ToPersonResponse()).ToListAsync();
+
+            foreach (var person in persons)
+            {
+                sheet.Cells[row, 1].Value = person.Name;
+                sheet.Cells[row, 2].Value = person.Email;
+                if (person.DateOfBirth.HasValue)
+                    sheet.Cells[row, 3].Value = person.DateOfBirth.Value.ToString("yyyy-MM-dd");
+                sheet.Cells[row, 4].Value = person.Age;
+                sheet.Cells[row, 5].Value = person.Gender;
+                sheet.Cells[row, 6].Value = person.Country;
+                sheet.Cells[row, 7].Value = person.Address;
+                sheet.Cells[row, 8].Value = person.ReceiveNewsLetter;
+
+                row++;
+            }
+            sheet.Cells[$"A1:H{row}"].AutoFitColumns();
+            await package.SaveAsync();
+
+        }
         memoryStream.Position = 0;
         return memoryStream;
     }

@@ -65,5 +65,18 @@ public interface IPersonService
     /// <returns>return true,if the deletion is successful.</returns>
     Task<bool> DeletePerson(Guid? personId);
 
+
+
+    /// <summary>
+    /// Returns persons as CSV
+    /// </summary>
+    /// <returns>Returns the memory stream with the CSV data of persons</returns>
     Task<MemoryStream> GetPersonsCSV();
+
+
+    /// <summary>
+    /// Return persons as Excel
+    /// </summary>
+    /// <returns>Returns the memory stream with excel data of persons</returns>
+    Task<MemoryStream> GetPersonsExcel();
 }

@@ -211,8 +211,16 @@ public class PersonsController : Controller
     [Route("/persons-csv")]
     public async Task<IActionResult> DownloadCSV()
     {
-        var memoryStream=await _personService.GetPersonsCSV();
-        return File(memoryStream,"application/octet-stream");
+        var memoryStream = await _personService.GetPersonsCSV();
+        return File(memoryStream, "application/octet-stream");
+    }
+
+    [HttpGet]
+    [Route("/persons-excel")]
+    public async Task<IActionResult> DownloadExcel()
+    {
+        var memoryStream = await _personService.GetPersonsExcel();
+        return File(memoryStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
     }
 
 }
