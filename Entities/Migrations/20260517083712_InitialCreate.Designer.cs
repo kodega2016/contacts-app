@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Entities.Migrations
 {
     [DbContext(typeof(PersonsDbContext))]
-    [Migration("20260515050127_fix_table_name")]
-    partial class fix_table_name
+    [Migration("20260517083712_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -97,7 +97,19 @@ namespace Entities.Migrations
                     b.Property<bool>("ReceiveNewsLetter")
                         .HasColumnType("bit");
 
+                    b.Property<string>("TFN")
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)")
+                        .HasDefaultValue("ABC");
+
                     b.HasKey("PersonId");
+
+                    b.HasIndex("CountryId");
+
+                    b.HasIndex("Email")
+                        .IsUnique()
+                        .HasFilter("[Email] IS NOT NULL");
 
                     b.ToTable("Persons", (string)null);
 
@@ -157,6 +169,20 @@ namespace Entities.Migrations
                             Name = "Sita Sharma",
                             ReceiveNewsLetter = false
                         });
+                });
+
+            modelBuilder.Entity("Entities.Person", b =>
+                {
+                    b.HasOne("Entities.Country", "Country")
+                        .WithMany("Persons")
+                        .HasForeignKey("CountryId");
+
+                    b.Navigation("Country");
+                });
+
+            modelBuilder.Entity("Entities.Country", b =>
+                {
+                    b.Navigation("Persons");
                 });
 #pragma warning restore 612, 618
         }

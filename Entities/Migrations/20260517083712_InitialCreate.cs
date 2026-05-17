@@ -8,13 +8,13 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Entities.Migrations
 {
     /// <inheritdoc />
-    public partial class Initial : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Counties",
+                name: "Countries",
                 columns: table => new
                 {
                     CountryID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -22,7 +22,7 @@ namespace Entities.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Counties", x => x.CountryID);
+                    table.PrimaryKey("PK_Countries", x => x.CountryID);
                 });
 
             migrationBuilder.CreateTable(
@@ -36,15 +36,21 @@ namespace Entities.Migrations
                     Gender = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: true),
                     CountryId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     Address = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
-                    ReceiveNewsLetter = table.Column<bool>(type: "bit", nullable: false)
+                    ReceiveNewsLetter = table.Column<bool>(type: "bit", nullable: false),
+                    TFN = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true, defaultValue: "ABC")
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Persons", x => x.PersonId);
+                    table.ForeignKey(
+                        name: "FK_Persons_Countries_CountryId",
+                        column: x => x.CountryId,
+                        principalTable: "Countries",
+                        principalColumn: "CountryID");
                 });
 
             migrationBuilder.InsertData(
-                table: "Counties",
+                table: "Countries",
                 columns: new[] { "CountryID", "CountryName" },
                 values: new object[,]
                 {
@@ -66,16 +72,28 @@ namespace Entities.Migrations
                     { new Guid("a1b2c3d4-1234-4abc-8def-123456789004"), "10 Downing St, London", new Guid("d9c7b5a1-1234-4abc-8def-123456789004"), new DateTime(1995, 11, 3, 0, 0, 0, 0, DateTimeKind.Unspecified), "emily.watson@example.com", "Female", "Emily Watson", true },
                     { new Guid("a1b2c3d4-1234-4abc-8def-123456789005"), "Basantapur, Kathmandu", new Guid("d9c7b5a1-1234-4abc-8def-123456789002"), new DateTime(1993, 7, 28, 0, 0, 0, 0, DateTimeKind.Unspecified), "sita.sharma@example.com", "Female", "Sita Sharma", false }
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Persons_CountryId",
+                table: "Persons",
+                column: "CountryId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Persons_Email",
+                table: "Persons",
+                column: "Email",
+                unique: true,
+                filter: "[Email] IS NOT NULL");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Counties");
+                name: "Persons");
 
             migrationBuilder.DropTable(
-                name: "Persons");
+                name: "Countries");
         }
     }
 }

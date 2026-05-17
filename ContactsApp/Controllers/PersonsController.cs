@@ -16,7 +16,6 @@ public class PersonsController : Controller
 {
     private readonly IPersonService _personService;
     private readonly ICountriesService _countriesService;
-    private static bool? _rotativaAvailable;
 
     public PersonsController(IPersonService personService, ICountriesService countriesService)
     {

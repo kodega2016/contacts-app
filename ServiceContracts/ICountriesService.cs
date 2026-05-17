@@ -1,4 +1,5 @@
 ﻿using ServiceContracts.DTO;
+using Microsoft.AspNetCore.Http;
 
 namespace ServiceContracts;
 
@@ -14,18 +15,23 @@ public interface ICountriesService
     /// <returns>Returns the country object after adding it(including newly generated id)</returns>
     Task<CountryResponse> AddCountry(CountryAddRequest? countryAddRequest);
 
-    
+
     /// <summary>
     /// 
     /// </summary>
     /// <returns></returns>
-   Task<List<CountryResponse>> GetCountries();
-    
+    Task<List<CountryResponse>> GetCountries();
+
     /// <summary>
     /// Returns a country object based on the given country id
     /// </summary>
     /// <param name="countryId"></param>
     /// <returns>return a matching CountryResponse object</returns>
-    
-    Task<CountryResponse?>GetCountryByCountryId(Guid? countryId);
+
+    Task<CountryResponse?> GetCountryByCountryId(Guid? countryId);
+
+
+  Task<int>  UploadCountriesFromExcelFile(IFormFile file);
 }
+
+

@@ -102,6 +102,12 @@ namespace Entities.Migrations
 
                     b.HasKey("PersonId");
 
+                    b.HasIndex("CountryId");
+
+                    b.HasIndex("Email")
+                        .IsUnique()
+                        .HasFilter("[Email] IS NOT NULL");
+
                     b.ToTable("Persons", (string)null);
 
                     b.HasData(
@@ -160,6 +166,20 @@ namespace Entities.Migrations
                             Name = "Sita Sharma",
                             ReceiveNewsLetter = false
                         });
+                });
+
+            modelBuilder.Entity("Entities.Person", b =>
+                {
+                    b.HasOne("Entities.Country", "Country")
+                        .WithMany("Persons")
+                        .HasForeignKey("CountryId");
+
+                    b.Navigation("Country");
+                });
+
+            modelBuilder.Entity("Entities.Country", b =>
+                {
+                    b.Navigation("Persons");
                 });
 #pragma warning restore 612, 618
         }

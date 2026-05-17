@@ -1,0 +1,25 @@
+@{
+    ViewBag.Title="Upload Countries From Excel";
+}
+
+<div class="card shadow p-4" style="margin: 2rem auto;">
+    @if(ViewBag.ErrorMessage!=null){
+        <div class="alert alert-danger">
+            @ViewBag.ErrorMessage
+        </div>
+    }
+
+     @if(ViewBag.Message!=null){
+        <div class="alert alert-success">
+            @ViewBag.Message
+        </div>
+    }
+    <h3 class="card-title mb-4">Upload Countries From Excel</h3>
+    <form asp-controller="Countries" asp-action="UploadFromExcel" enctype="multipart/form-data">
+        <div class="mb-3 form-group">
+            <label for="fileInput" class="form-label fw-bold">Choose an XLSX file</label>
+            <input type="file" name="file" id="fileInput" class="form-control"/>
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+</div>
