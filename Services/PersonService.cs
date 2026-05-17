@@ -6,6 +6,7 @@ using ServiceContracts;
 using ServiceContracts.DTO;
 using ServiceContracts.Enums;
 using Services.Helpers;
+using CsvHelper.Configuration;
 
 namespace Services;
 
@@ -175,7 +176,7 @@ public class PersonService : IPersonService
 
     public async Task<PersonResponse?> UpdatePerson(PersonUpdateRequest? request)
     {
-        if (request == null) throw new ArgumentNullException(nameof(request));
+        ArgumentNullException.ThrowIfNull(request);
         if (request.Name == null) throw new ArgumentException(nameof(request.Name));
 
 
@@ -223,19 +224,65 @@ public class PersonService : IPersonService
 
     public async Task<MemoryStream> GetPersonsCSV()
     {
+        // MemoryStream memoryStream = new();
+        // StreamWriter streamWriter = new(memoryStream);
+        // var persons = await _db.Persons.Select(temp => temp.ToPersonResponse()).ToListAsync();
+        // CsvConfiguration csvConfiguration = new(CultureInfo.InvariantCulture);
+        //
+        //
+        // CsvWriter csvWriter = new(streamWriter, CultureInfo.InvariantCulture, leaveOpen: true);
+        //
+        // // Write CSV Headers
+        // csvWriter.WriteHeader<PersonResponse>();
+        // await csvWriter.NextRecordAsync();
+        // // Write the body to the csv
+        // await csvWriter.WriteRecordsAsync(persons);
+        // await csvWriter.FlushAsync();
+        // await streamWriter.FlushAsync();
+        // memoryStream.Position = 0;
+        // return memoryStream;
+
+
+
         MemoryStream memoryStream = new();
         StreamWriter streamWriter = new(memoryStream);
-        CsvWriter csvWriter=new(streamWriter,CultureInfo.InvariantCulture,leaveOpen:true);
-        var persons = await _db.Persons.Select(temp => temp.ToPersonResponse()).ToListAsync();
+        var persons = await _db.Persons.Include("Country").Select(temp => temp.ToPersonResponse()).ToListAsync();
+        CsvConfiguration csvConfiguration = new(CultureInfo.InvariantCulture);
+
+
+        CsvWriter csvWriter = new(streamWriter, csvConfiguration);
 
         // Write CSV Headers
-        csvWriter.WriteHeader<PersonResponse>();
+        csvWriter.WriteField(nameof(PersonResponse.Name));
+        csvWriter.WriteField(nameof(PersonResponse.Email));
+        csvWriter.WriteField(nameof(PersonResponse.DateOfBirth));
+        csvWriter.WriteField(nameof(PersonResponse.Age));
+        csvWriter.WriteField(nameof(PersonResponse.Gender));
+        csvWriter.WriteField(nameof(PersonResponse.Country));
+        csvWriter.WriteField(nameof(PersonResponse.Address));
+        csvWriter.WriteField(nameof(PersonResponse.ReceiveNewsLetter));
+
         await csvWriter.NextRecordAsync();
-        // Write the body to the csv
-        await csvWriter.WriteRecordsAsync(persons);
         await csvWriter.FlushAsync();
-        await streamWriter.FlushAsync();
-        memoryStream.Position=0;
+
+        foreach (var person in persons)
+        {
+            csvWriter.WriteField(person.Name);
+            csvWriter.WriteField(person.Email);
+            if (person.DateOfBirth.HasValue)
+                csvWriter.WriteField(person.DateOfBirth);
+            else
+                csvWriter.WriteField("");
+            csvWriter.WriteField(person.Age);
+            csvWriter.WriteField(person.Gender);
+            csvWriter.WriteField(person.Country);
+            csvWriter.WriteField(person.Address);
+            csvWriter.WriteField(person.ReceiveNewsLetter);
+            await csvWriter.NextRecordAsync();
+            await csvWriter.FlushAsync();
+        }
+
+        memoryStream.Position = 0;
         return memoryStream;
     }
 }
