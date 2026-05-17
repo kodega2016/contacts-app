@@ -31,7 +31,7 @@ public class CountriesController : Controller
     [HttpPost]
     [Route("upload-from-excel")]
 
-    public async Task<IActionResult> UploadFromExcel(IFormFile file)
+    public async Task<IActionResult> UploadFromExcel(IFormFile? file)
     {
         if (file == null || file.Length == 0)
         {
@@ -45,7 +45,7 @@ public class CountriesController : Controller
         }
 
         var countriesAdded = await _countriesService.UploadCountriesFromExcelFile(file);
-        ViewBag.Message = $"{countriesAdded} Countires are uploaded.";
+        ViewBag.Message = $"{countriesAdded} Countries are uploaded.";
         return View("upload-from-excel");
     }
 }

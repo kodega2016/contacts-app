@@ -3,13 +3,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Entities
 {
-    public class PersonsDbContext : DbContext
+    public class ApplicationDbContext : DbContext
     {
         public DbSet<Person> Persons { get; set; }
         public DbSet<Country> Countries { get; set; }
 
-
-        public PersonsDbContext(DbContextOptions<PersonsDbContext> options) : base(options) { }
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -38,8 +37,6 @@ namespace Entities
             .HasMaxLength(200).
             HasDefaultValue("ABC");
             // IsRequired(true);
-            //
-
 
             // setting up the unique constraint using fluent api
             modelBuilder.Entity<Person>().HasIndex("Email").IsUnique();
@@ -47,8 +44,8 @@ namespace Entities
             // relationship
             modelBuilder.Entity<Person>(entity =>
             {
-                entity.HasOne<Country>(c=>c.Country)
-                .WithMany(p=>p.Persons);
+                entity.HasOne<Country>(c => c.Country)
+                .WithMany(p => p.Persons);
             });
 
         }

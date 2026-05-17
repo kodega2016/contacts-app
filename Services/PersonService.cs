@@ -13,11 +13,11 @@ namespace Services;
 
 public class PersonService : IPersonService
 {
-    private readonly PersonsDbContext _db;
+    private readonly ApplicationDbContext _db;
 
-    public PersonService(PersonsDbContext personsDbContext)
+    public PersonService(ApplicationDbContext applicationDbContext)
     {
-        _db = personsDbContext;
+        _db = applicationDbContext;
     }
 
 
